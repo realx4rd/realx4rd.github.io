@@ -1,0 +1,67 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Open Graph type, e.g. "website" or "article". */
+  ogType?: string;
+  /** Path (relative to site) of the social share image. */
+  image?: string;
+}
+
+const {
+  title,
+  description,
+  ogType = 'website',
+  image = '/og.svg',
+} = Astro.props;
+
+const SITE_NAME = 'Click & Learn Academy';
+const fullTitle = title === SITE_NAME ? title : `${title} · ${SITE_NAME}`;
+// Astro.site is set in astro.config.mjs; fall back gracefully in dev.
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'http://localhost:4321').href;
+const ogImage = new URL(image, Astro.site ?? 'http://localhost:4321').href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- The course teaches SEO + Open Graph; this site practises it. -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <meta name="theme-color" content="#f5eddd" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body class="min-h-screen antialiased">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:border-2 focus:border-ink focus:bg-card focus:px-4 focus:py-2 focus:font-medium focus:shadow-block-sm"
+    >
+      Skip to content
+    </a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,121 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const groups = [
+  {
+    name: 'HTML & CSS',
+    blurb: 'The foundations — structure and style.',
+    links: [
+      { label: 'MDN Web Docs — the reference', url: 'https://developer.mozilla.org/en-US/docs/Learn_web_development' },
+      { label: 'The Odin Project — Foundations', url: 'https://www.theodinproject.com/paths/foundations/courses/foundations' },
+      { label: 'freeCodeCamp — Responsive Web Design', url: 'https://www.freecodecamp.org/learn/responsive-web-design-v9/' },
+      { label: 'web.dev — Learn CSS', url: 'https://web.dev/learn/css' },
+      { label: 'Flexbox Froggy (game)', url: 'https://flexboxfroggy.com/' },
+      { label: 'CSS Grid Garden (game)', url: 'https://cssgridgarden.com/' },
+    ],
+  },
+  {
+    name: 'JavaScript',
+    blurb: 'The biggest phase — take your time here.',
+    links: [
+      { label: 'MDN — JavaScript guide', url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide' },
+      { label: 'javascript.info — The Modern JS Tutorial', url: 'https://javascript.info/' },
+      { label: 'The Odin Project — JavaScript', url: 'https://www.theodinproject.com/paths/foundations/courses/foundations' },
+      { label: 'freeCodeCamp — JavaScript', url: 'https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures-v8/' },
+    ],
+  },
+  {
+    name: 'Tailwind · Alpine · jQuery',
+    blurb: 'The modern tooling layer.',
+    links: [
+      { label: 'Tailwind CSS — Docs', url: 'https://tailwindcss.com/docs' },
+      { label: 'Tailwind CSS — Play CDN (zero setup)', url: 'https://tailwindcss.com/docs/installation/play-cdn' },
+      { label: 'Alpine.js — Start Here', url: 'https://alpinejs.dev/start-here' },
+      { label: 'jQuery — API reference (legacy literacy)', url: 'https://api.jquery.com/' },
+    ],
+  },
+  {
+    name: 'Tools & Git',
+    blurb: 'Your workshop and your safety net.',
+    links: [
+      { label: 'VS Code — Getting Started', url: 'https://code.visualstudio.com/docs/introvideos/basics' },
+      { label: 'Git — the simple guide', url: 'https://rogerdudler.github.io/git-guide/' },
+      { label: 'GitHub Skills', url: 'https://skills.github.com/' },
+      { label: 'Chrome DevTools — Docs', url: 'https://developer.chrome.com/docs/devtools/overview' },
+    ],
+  },
+  {
+    name: 'Learn how to learn (+ AI)',
+    blurb: 'The meta-skills that outlast any framework.',
+    links: [
+      { label: 'MDN — Getting started (soft skills)', url: 'https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started' },
+      { label: 'freeCodeCamp — Escaping tutorial hell', url: 'https://www.freecodecamp.org/news/how-to-learn-from-coding-tutorials-and-avoid-tutorial-hell/' },
+    ],
+  },
+  {
+    name: 'Design · Accessibility · SEO · Performance',
+    blurb: 'The pro-skills that make work look hireable.',
+    links: [
+      { label: 'Refactoring UI — design tips', url: 'https://www.refactoringui.com/' },
+      { label: 'Google Fonts', url: 'https://fonts.google.com/' },
+      { label: 'WebAIM — Contrast Checker', url: 'https://webaim.org/resources/contrastchecker/' },
+      { label: 'The A11Y Project — Checklist', url: 'https://www.a11yproject.com/checklist/' },
+      { label: 'The Open Graph protocol', url: 'https://ogp.me/' },
+      { label: 'web.dev — Core Web Vitals', url: 'https://web.dev/articles/vitals' },
+      { label: 'Squoosh — image compression', url: 'https://squoosh.app/' },
+    ],
+  },
+  {
+    name: 'Deploy for free',
+    blurb: 'Get your work on the real internet.',
+    links: [
+      { label: 'GitHub Pages — Quickstart', url: 'https://docs.github.com/en/pages/quickstart' },
+      { label: 'Cloudflare Pages — Docs', url: 'https://developers.cloudflare.com/pages/' },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="Resources"
+  description="A curated library of the best free resources for learning web development — MDN, The Odin Project, freeCodeCamp, official docs, plus design, accessibility, SEO and deployment guides."
+>
+  <section class="grid-paper border-b-2 border-ink">
+    <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+      <p class="font-mono text-xs uppercase tracking-[0.2em] text-vermilion-deep">Resources</p>
+      <h1 class="mt-2 text-balance text-4xl font-semibold tracking-tight sm:text-5xl">The best of the free web</h1>
+      <p class="mt-4 max-w-2xl text-pretty text-lg text-ink-2">
+        You don't need to buy anything to learn web development — the best material is free.
+        This is our hand-picked shortlist. Every week page also links the exact resources for
+        that week.
+      </p>
+    </div>
+  </section>
+
+  <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {
+        groups.map((g) => (
+          <section class="rounded-[14px] border-2 border-ink bg-card p-6 shadow-block-sm">
+            <h2 class="font-display text-xl font-semibold">{g.name}</h2>
+            <p class="mt-1 text-sm text-ink-2">{g.blurb}</p>
+            <ul class="mt-4 space-y-2.5">
+              {g.links.map((l) => (
+                <li>
+                  <a href={l.url} target="_blank" rel="noopener noreferrer" class="group flex items-start gap-2 text-sm">
+                    <span class="mt-0.5 text-vermilion" aria-hidden="true">↗</span>
+                    <span class="underline-offset-4 group-hover:text-vermilion-deep group-hover:underline">{l.label}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+
+    <p class="mt-10 text-center font-mono text-sm text-ink-3">
+      Found a great free resource? That's the spirit — keep a list of your own.
+    </p>
+  </div>
+</BaseLayout>

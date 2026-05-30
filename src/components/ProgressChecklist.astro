@@ -1,0 +1,78 @@
+---
+interface Item {
+  id: string;
+  label: string;
+}
+interface Props {
+  storageKey: string;
+  items: Item[];
+  title?: string;
+}
+const { storageKey, items, title = 'Track your week' } = Astro.props;
+const total = items.length;
+
+// Inline Alpine state — persists tick-boxes to localStorage so progress survives reloads.
+const dataExpr = `{
+  total: ${total},
+  key: '${storageKey}',
+  done: {},
+  init() {
+    try { this.done = JSON.parse(localStorage.getItem(this.key)) || {}; }
+    catch (e) { this.done = {}; }
+  },
+  toggle(id) {
+    this.done = { ...this.done, [id]: !this.done[id] };
+    localStorage.setItem(this.key, JSON.stringify(this.done));
+  },
+  get count() { return Object.values(this.done).filter(Boolean).length; }
+}`;
+---
+
+<section
+  x-data={dataExpr}
+  class="rounded-[14px] border-2 border-ink bg-card p-5 shadow-block"
+  aria-label={title}
+>
+  <div class="flex items-baseline justify-between gap-3">
+    <h2 class="font-display text-lg font-semibold">{title}</h2>
+    <p class="font-mono text-sm text-ink-2">
+      <span x-text="count">0</span><span class="text-ink-3">/{total}</span>
+    </p>
+  </div>
+
+  <div class="mt-3 h-2.5 w-full overflow-hidden rounded-full border border-ink/20 bg-paper-2">
+    <div
+      class="h-full rounded-full bg-vermilion transition-[width] duration-300"
+      x-bind:style="'width:' + (count / total * 100) + '%'"
+    >
+    </div>
+  </div>
+
+  <ul class="mt-4 space-y-1.5">
+    {
+      items.map((it) => (
+        <li>
+          <label class="flex cursor-pointer items-start gap-3 rounded-lg px-2 py-1.5 hover:bg-paper-2">
+            <input
+              type="checkbox"
+              class="mt-0.5 h-5 w-5 shrink-0 rounded border-2 border-ink accent-vermilion"
+              x-bind:checked={`!!done['${it.id}']`}
+              x-on:change={`toggle('${it.id}')`}
+            />
+            <span class="text-sm leading-snug" x-bind:class={`{ 'line-through text-ink-3': done['${it.id}'] }`}>
+              {it.label}
+            </span>
+          </label>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p
+    x-show="count === total"
+    x-cloak
+    class="mt-3 rounded-lg border-2 border-ink bg-honey/25 px-3 py-2 text-center text-sm font-semibold"
+  >
+    Week complete — ship it! 🎉
+  </p>
+</section>

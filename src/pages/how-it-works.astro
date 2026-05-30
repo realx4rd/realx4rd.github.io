@@ -1,0 +1,173 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const houseRules = [
+  { n: 1, t: '20-minute watch cap', d: 'After 20 minutes of reading or watching, you build something. No exceptions.' },
+  { n: 2, t: 'Code-along, then code-alone', d: 'Every guided example is followed by a blank-slate version you write yourself.' },
+  { n: 3, t: 'No paste-without-retype', d: 'If you copy a snippet, you retype it and explain what it does.' },
+  { n: 4, t: 'Stuck 30 min? Ask', d: 'Rubber-duck it, search it, then ask a human. Silent struggling is the #1 reason people quit.' },
+];
+
+const proSkills = [
+  { t: 'Git ritual', d: 'Every project: branch, commit as you go, push to GitHub. Daily green squares.' },
+  { t: 'Debug-first reflex', d: 'Investigate bugs in DevTools — inspect, Console, breakpoints — before asking anyone.' },
+  { t: 'Accessibility checklist', d: 'Every UI: semantic HTML, alt text, labels, colour contrast, visible focus.' },
+  { t: '“Don’t-make-it-ugly” rubric', d: 'Every UI judged on spacing, type scale, and colour. Design is a habit.' },
+  { t: 'Ship + SEO', d: 'Every project deploys; real pages get a title, meta description, and Open Graph card.' },
+  { t: 'Security one-liners', d: 'Never commit secrets, always HTTPS, never trust user input.' },
+];
+
+const aiRules = [
+  { t: 'The Ownership Test', d: '“If the AI vanished tomorrow, could I still solve this?” If the answer keeps being no, you’re leaning too hard.' },
+  { t: 'The AI-free rep', d: 'For each concept, solve at least one exercise completely on your own before comparing with an AI’s version.' },
+  { t: 'Explain-it-back', d: 'Your code isn’t “done” until you can narrate what every line does.' },
+  { t: 'Ask for lessons, not answers', d: '“Explain the box model with two examples, then give me three practice tasks without solutions.”' },
+];
+
+const checkpoints = [
+  { k: 'Daily', d: 'A micro-exercise committed to GitHub — and you can explain it.' },
+  { k: 'Weekly', d: 'A deployed project, self/peer-reviewed against a short rubric.' },
+  { k: 'Week 8', d: 'Mid-course checkpoint: your API app reviewed to see you’re on track.' },
+  { k: 'Week 12', d: 'Capstone + portfolio — your graduation criteria.' },
+];
+---
+
+<BaseLayout
+  title="How it works"
+  description="The teaching method behind the course: a simple daily loop, weekly shipping, anti-tutorial-hell house rules, woven pro-skills, an honest AI code-of-conduct, and real accountability."
+>
+  <section class="grid-paper border-b-2 border-ink">
+    <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+      <p class="font-mono text-xs uppercase tracking-[0.2em] text-vermilion-deep">The method</p>
+      <h1 class="mt-2 text-balance text-4xl font-semibold tracking-tight sm:text-5xl">Built so you actually finish</h1>
+      <p class="mt-4 max-w-2xl text-pretty text-lg text-ink-2">
+        Most self-paced courses are finished by only 5–15% of people. We engineer against
+        the three reasons people quit: unrealistic expectations, tutorial hell, and no
+        accountability. Here's how.
+      </p>
+    </div>
+  </section>
+
+  <div class="mx-auto max-w-4xl px-4 py-16 sm:px-6">
+    <!-- Daily + weekly rhythm -->
+    <section>
+      <h2 class="font-display text-3xl font-semibold tracking-tight">The rhythm</h2>
+      <div class="mt-6 grid gap-4 sm:grid-cols-2">
+        <div class="rounded-[14px] border-2 border-ink bg-card p-6 shadow-block-sm">
+          <h3 class="font-mono text-xs uppercase tracking-[0.2em] text-ink-3">Every day · ~90 min</h3>
+          <ol class="mt-4 space-y-3 text-sm">
+            <li><span class="font-mono font-bold text-vermilion-deep">10m</span> · Warm-up — recall yesterday.</li>
+            <li><span class="font-mono font-bold text-vermilion-deep">20m</span> · Learn one concept (hard cap).</li>
+            <li><span class="font-mono font-bold text-vermilion-deep">35m</span> · Code-along (guided).</li>
+            <li><span class="font-mono font-bold text-vermilion-deep">35m</span> · Code-alone (the day's assignment).</li>
+            <li><span class="font-mono font-bold text-vermilion-deep">10m</span> · Commit &amp; log to GitHub.</li>
+          </ol>
+        </div>
+        <div class="rounded-[14px] border-2 border-ink bg-honey/20 p-6 shadow-block-sm">
+          <h3 class="font-mono text-xs uppercase tracking-[0.2em] text-honey-deep">Every weekend · ~3 hrs</h3>
+          <div class="mt-4 space-y-3 text-sm">
+            <p><strong>Build-from-scratch project</strong> that ties the week's concepts together — then deploy it live.</p>
+            <p>Your portfolio grows by one real, shareable piece <em>every single week</em>.</p>
+            <p class="font-mono text-xs text-ink-2">12 weeks → 11 projects + a capstone.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- House rules -->
+    <section class="mt-16">
+      <h2 class="font-display text-3xl font-semibold tracking-tight">House rules: no tutorial hell</h2>
+      <p class="mt-2 max-w-2xl text-ink-2">“Tutorial hell” is being able to follow along but freezing at a blank page. These four rules keep you out of it.</p>
+      <ul class="mt-6 grid gap-4 sm:grid-cols-2">
+        {
+          houseRules.map((r) => (
+            <li class="flex gap-4 rounded-[14px] border-2 border-ink bg-card p-5 shadow-block-sm">
+              <span class="font-display text-3xl font-bold text-ink-3">{r.n}</span>
+              <div>
+                <h3 class="font-display text-lg font-semibold">{r.t}</h3>
+                <p class="mt-1 text-sm text-ink-2">{r.d}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <!-- Pro-skills -->
+    <section class="mt-16">
+      <h2 class="font-display text-3xl font-semibold tracking-tight">The pro-skills woven through every week</h2>
+      <p class="mt-2 max-w-2xl text-ink-2">These ride the projects you're already building, so they cost almost no extra time — but they're the difference between “knows syntax” and “works like a developer.”</p>
+      <ul class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          proSkills.map((p) => (
+            <li class="rounded-xl border border-ink/20 bg-card p-4">
+              <h3 class="font-display font-semibold">{p.t}</h3>
+              <p class="mt-1 text-sm text-ink-2">{p.d}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <!-- AI code-of-conduct -->
+    <section id="ai" class="mt-16 scroll-mt-24">
+      <div class="rounded-[14px] border-2 border-ink bg-ink p-7 text-paper shadow-block sm:p-9">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-honey">Learning in 2026</p>
+        <h2 class="mt-2 font-display text-3xl font-semibold tracking-tight text-paper">Our AI code-of-conduct</h2>
+        <p class="mt-3 max-w-2xl text-pretty text-paper/80">
+          We don't ban AI — that would be silly in 2026. We teach you to use it as a patient
+          tutor with rules, because the new core skill is being able to <strong class="text-paper">verify and explain</strong>
+          what code does, not just generate it.
+        </p>
+        <ul class="mt-6 grid gap-4 sm:grid-cols-2">
+          {
+            aiRules.map((r) => (
+              <li class="rounded-xl border-2 border-paper/20 bg-paper/5 p-5">
+                <h3 class="font-display text-lg font-semibold text-paper">{r.t}</h3>
+                <p class="mt-1 text-sm text-paper/75">{r.d}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <!-- Accountability + checkpoints -->
+    <section class="mt-16 grid gap-6 lg:grid-cols-2">
+      <div>
+        <h2 class="font-display text-3xl font-semibold tracking-tight">Accountability</h2>
+        <p class="mt-2 text-ink-2">The single biggest lever on finishing. We make your progress visible and social.</p>
+        <ul class="mt-5 space-y-3">
+          <li class="flex items-start gap-3 rounded-xl border border-ink/20 bg-card p-4"><span aria-hidden="true">🟩</span><span><strong>GitHub commit streak</strong> — visible daily proof you showed up.</span></li>
+          <li class="flex items-start gap-3 rounded-xl border border-ink/20 bg-card p-4"><span aria-hidden="true">🚀</span><span><strong>Weekly deployed project</strong> — tangible momentum you can share.</span></li>
+          <li class="flex items-start gap-3 rounded-xl border border-ink/20 bg-card p-4"><span aria-hidden="true">💬</span><span><strong>A community channel</strong> with optional peer code review — strongly recommended.</span></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="font-display text-3xl font-semibold tracking-tight">Checkpoints</h2>
+        <p class="mt-2 text-ink-2">Light, honest checks so you always know if you're on track.</p>
+        <ul class="mt-5 space-y-3">
+          {
+            checkpoints.map((c) => (
+              <li class="flex items-start gap-4 rounded-xl border border-ink/20 bg-card p-4">
+                <span class="shrink-0 rounded-md border-2 border-ink bg-paper-2 px-2 py-1 font-mono text-xs font-bold">{c.k}</span>
+                <span class="text-sm">{c.d}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <div class="mt-16 rounded-[14px] border-2 border-dashed border-ink/50 bg-paper-2 p-7 text-center">
+      <p class="mx-auto max-w-xl text-pretty text-ink-2">
+        We'll say it plainly on day one: in 12 weeks at ~1.5 hrs/day you'll build & deploy
+        interactive sites and own an 11-project portfolio. That's foundational front-end —
+        and an honest, finishable goal.
+      </p>
+      <a href="/weeks/0" class="mt-5 inline-flex items-center gap-2 rounded-xl border-2 border-ink bg-vermilion px-5 py-3 font-semibold text-white shadow-block-sm transition-transform hover:-translate-y-0.5">
+        Start Week 0 <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</BaseLayout>

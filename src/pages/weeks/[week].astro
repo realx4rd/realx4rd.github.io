@@ -1,0 +1,228 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TechBadge from '../../components/TechBadge.astro';
+import ProgressChecklist from '../../components/ProgressChecklist.astro';
+import { phaseByNumber } from '../../data/phases';
+
+export async function getStaticPaths() {
+  const weeks = (await getCollection('weeks')).sort((a, b) => a.data.week - b.data.week);
+  return weeks.map((entry, i) => ({
+    params: { week: String(entry.data.week) },
+    props: {
+      entry,
+      prev: i > 0 ? weeks[i - 1] : null,
+      next: i < weeks.length - 1 ? weeks[i + 1] : null,
+    },
+  }));
+}
+
+const { entry, prev, next } = Astro.props;
+const d = entry.data;
+const phase = phaseByNumber(d.phaseNumber);
+const { Content } = await render(entry);
+
+const checklistItems = [
+  ...d.days.map((day) => ({ id: `d${day.n}`, label: `Day ${day.n}: ${day.topic}` })),
+  { id: 'deliverable', label: d.project ? `Project: ${d.project.title}` : 'Week deliverable' },
+];
+
+const labelFor = (n: number) => (n === 0 ? 'Launch Pad' : `Week ${n}`);
+const pageTitle = `${labelFor(d.week)}: ${d.title}`;
+---
+
+<BaseLayout title={pageTitle} description={d.focus} ogType="article">
+  <!-- Header band -->
+  <section class="grid-paper border-b-2 border-ink">
+    <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+      <a href="/roadmap" class="inline-flex items-center gap-1.5 font-mono text-xs text-ink-2 underline-offset-4 hover:text-vermilion-deep hover:underline">
+        <span aria-hidden="true">←</span> Roadmap
+      </a>
+      <div class="mt-4 flex flex-wrap items-center gap-3">
+        <span
+          class="inline-flex items-center gap-2 rounded-full border-2 border-ink bg-card px-3 py-1 font-mono text-xs font-semibold"
+          style={`color:${phase.hex}`}
+        >
+          <span class="h-2.5 w-2.5 rounded-full" style={`background:${phase.hex}`}></span>
+          {phase.name}
+        </span>
+        <span class="font-mono text-xs text-ink-2">{labelFor(d.week)} · {phase.weeks}</span>
+        {
+          d.milestone && (
+            <span class="inline-flex items-center gap-1 rounded-full border-2 border-ink bg-honey px-2.5 py-1 font-mono text-xs font-semibold">
+              ★ Milestone
+            </span>
+          )
+        }
+      </div>
+      <h1 class="reveal mt-4 max-w-3xl text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
+        {d.title}
+      </h1>
+      <p class="reveal mt-3 max-w-2xl text-pretty text-lg text-ink-2" style="animation-delay:.05s">{d.focus}</p>
+      <div class="mt-5 flex flex-wrap items-center gap-2">
+        {d.tech.map((t) => <TechBadge tech={t} />)}
+        <span class="ml-1 font-mono text-xs text-ink-2">~{d.hours} hrs · {d.days.length} days</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1fr_320px]">
+    <article class="min-w-0">
+      <!-- Objectives -->
+      <h2 class="font-mono text-xs uppercase tracking-[0.2em] text-ink-3">By the end of this week, you can</h2>
+      <ul class="mt-4 grid gap-2.5 sm:grid-cols-2">
+        {
+          d.objectives.map((o) => (
+            <li class="flex items-start gap-2.5 rounded-xl border border-ink/15 bg-card p-3 text-sm">
+              <span class="mt-0.5 text-teal-deep" aria-hidden="true">✓</span>
+              <span>{o}</span>
+            </li>
+          ))
+        }
+      </ul>
+
+      <!-- Daily breakdown -->
+      <h2 class="mt-12 font-display text-2xl font-semibold">The week, day by day</h2>
+      <p class="mt-1 text-sm text-ink-2">Each day ≈ 1.5&nbsp;hrs: learn briefly, build along, then build it again on your own.</p>
+      <ol class="mt-5 space-y-4">
+        {
+          d.days.map((day) => (
+            <li class="rounded-[14px] border-2 border-ink bg-card shadow-block-sm">
+              <div class="flex flex-col gap-4 p-5 sm:flex-row">
+                <div class="shrink-0">
+                  <span class="inline-flex h-12 w-12 items-center justify-center rounded-xl border-2 border-ink bg-paper-2 font-mono text-sm font-bold">
+                    D{day.n}
+                  </span>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <h3 class="font-display text-lg font-semibold">{day.topic}</h3>
+                  <dl class="mt-2 space-y-1.5 text-sm">
+                    <div class="flex gap-2">
+                      <dt class="w-14 shrink-0 font-mono text-xs uppercase tracking-wide text-ink-3">Learn</dt>
+                      <dd class="text-ink-2">{day.learn}</dd>
+                    </div>
+                    {day.build && (
+                      <div class="flex gap-2">
+                        <dt class="w-14 shrink-0 font-mono text-xs uppercase tracking-wide text-ink-3">Build</dt>
+                        <dd class="text-ink-2">{day.build}</dd>
+                      </div>
+                    )}
+                  </dl>
+                  <div class="mt-3 rounded-lg border-l-4 border-vermilion bg-vermilion/8 px-3 py-2">
+                    <span class="font-mono text-xs font-semibold uppercase tracking-wide text-vermilion-deep">Do it →</span>
+                    <p class="mt-0.5 text-sm">{day.assignment}</p>
+                  </div>
+                </div>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+
+      <!-- Project / deliverable -->
+      {
+        d.project && (
+          <div class="mt-12 overflow-hidden rounded-[14px] border-2 border-ink bg-ink text-paper shadow-block">
+            <div class="border-b-2 border-paper/15 px-6 py-4">
+              <span class="font-mono text-xs uppercase tracking-[0.2em] text-honey">Weekend project · ship it</span>
+              <h2 class="mt-1 font-display text-2xl font-semibold text-paper">{d.project.title}</h2>
+            </div>
+            <div class="px-6 py-5">
+              <p class="text-pretty text-paper/85">{d.project.brief}</p>
+              {d.project.deploy && (
+                <p class="mt-3 inline-flex items-center gap-2 rounded-lg bg-paper/10 px-3 py-1.5 font-mono text-xs text-paper/90">
+                  <span aria-hidden="true">⬆</span> Deploy to {d.project.deploy}
+                </p>
+              )}
+              <h3 class="mt-5 font-mono text-xs uppercase tracking-[0.2em] text-paper/60">Self / peer-review checklist</h3>
+              <ul class="mt-2 space-y-1.5">
+                {d.project.rubric.map((r) => (
+                  <li class="flex items-start gap-2.5 text-sm text-paper/90">
+                    <span class="mt-0.5 text-honey" aria-hidden="true">◻</span>
+                    <span>{r}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )
+      }
+      {
+        d.deliverable && (
+          <div class="mt-12 rounded-[14px] border-2 border-ink bg-honey/20 p-6 shadow-block">
+            <span class="font-mono text-xs uppercase tracking-[0.2em] text-honey-deep">This week's deliverable</span>
+            <p class="mt-2 text-pretty text-lg font-medium">{d.deliverable}</p>
+          </div>
+        )
+      }
+
+      <!-- Markdown body -->
+      <div class="lesson-prose mt-12 max-w-2xl">
+        <Content />
+      </div>
+
+      <!-- Prev / next -->
+      <nav class="mt-14 grid gap-3 border-t-2 border-ink/15 pt-6 sm:grid-cols-2" aria-label="Week navigation">
+        {
+          prev ? (
+            <a href={`/weeks/${prev.data.week}`} class="group rounded-xl border-2 border-ink bg-card p-4 shadow-block-sm transition-transform hover:-translate-y-0.5">
+              <span class="font-mono text-xs text-ink-3">← {labelFor(prev.data.week)}</span>
+              <span class="mt-1 block font-display font-semibold group-hover:text-vermilion-deep">{prev.data.title}</span>
+            </a>
+          ) : (
+            <span />
+          )
+        }
+        {
+          next ? (
+            <a href={`/weeks/${next.data.week}`} class="group rounded-xl border-2 border-ink bg-card p-4 text-right shadow-block-sm transition-transform hover:-translate-y-0.5">
+              <span class="font-mono text-xs text-ink-3">{labelFor(next.data.week)} →</span>
+              <span class="mt-1 block font-display font-semibold group-hover:text-vermilion-deep">{next.data.title}</span>
+            </a>
+          ) : (
+            <a href="/roadmap" class="group rounded-xl border-2 border-ink bg-honey/20 p-4 text-right shadow-block-sm transition-transform hover:-translate-y-0.5">
+              <span class="font-mono text-xs text-ink-3">Finished →</span>
+              <span class="mt-1 block font-display font-semibold">Back to the roadmap</span>
+            </a>
+          )
+        }
+      </nav>
+    </article>
+
+    <!-- Sidebar -->
+    <aside class="space-y-6 lg:sticky lg:top-24 lg:self-start">
+      <ProgressChecklist storageKey={`clala:week-${d.week}`} items={checklistItems} title="Tick off your week" />
+
+      {
+        d.proSkills.length > 0 && (
+          <div class="rounded-[14px] border-2 border-ink bg-card p-5">
+            <h2 class="font-mono text-xs uppercase tracking-[0.2em] text-ink-3">Pro-skills in play</h2>
+            <ul class="mt-3 flex flex-wrap gap-2">
+              {d.proSkills.map((p) => (
+                <li class="rounded-md border border-ink/20 bg-paper-2 px-2.5 py-1 text-xs font-medium">{p}</li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+
+      {
+        d.resources.length > 0 && (
+          <div class="rounded-[14px] border-2 border-ink bg-card p-5">
+            <h2 class="font-mono text-xs uppercase tracking-[0.2em] text-ink-3">Free resources</h2>
+            <ul class="mt-3 space-y-2.5">
+              {d.resources.map((r) => (
+                <li>
+                  <a href={r.url} target="_blank" rel="noopener noreferrer" class="group flex items-start gap-2 text-sm">
+                    <span class="mt-0.5 text-vermilion" aria-hidden="true">↗</span>
+                    <span class="underline-offset-4 group-hover:text-vermilion-deep group-hover:underline">{r.label}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+    </aside>
+  </div>
+</BaseLayout>

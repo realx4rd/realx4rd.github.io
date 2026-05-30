@@ -1,0 +1,281 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TechBadge from '../components/TechBadge.astro';
+import { phases } from '../data/phases';
+
+const stack = [
+  { name: 'HTML', role: 'Structure — the skeleton of every page', when: 'Week 1' },
+  { name: 'CSS', role: 'Style — colour, layout & responsive design', when: 'Weeks 2–4' },
+  { name: 'JavaScript', role: 'Behaviour — logic, the DOM & live data', when: 'Weeks 5–8' },
+  { name: 'Tailwind CSS', role: 'Style at speed with utility classes', when: 'Week 9' },
+  { name: 'Alpine.js', role: 'Sprinkle in interactivity, declaratively', when: 'Weeks 10–11' },
+  { name: 'jQuery', role: 'Read & recognise legacy code (a brief overview)', when: 'Week 11' },
+];
+
+const loop = [
+  { k: '20m', t: 'Learn', d: 'One concept from a hand-picked free resource. Hard cap — no binge-watching.' },
+  { k: '35m', t: 'Build along', d: 'Follow a guided demo so the idea clicks in your hands.' },
+  { k: '35m', t: 'Build alone', d: 'The same idea on a blank page, in your own words. This is where it sticks.' },
+  { k: '↗', t: 'Commit & ship', d: 'Push to GitHub every day; deploy a real project every weekend.' },
+];
+
+const stats = [
+  { n: '3', u: 'months', d: 'self-paced' },
+  { n: '~120', u: 'hours', d: '1–2 hrs a day' },
+  { n: '12', u: 'projects', d: 'all deployed' },
+  { n: '$0', u: 'forever', d: 'non-profit' },
+];
+---
+
+<BaseLayout
+  title="Click & Learn Academy"
+  description="A free, non-profit academy that takes complete beginners from zero to shipping real, responsive, interactive websites in three self-paced months. HTML, CSS, JavaScript, Tailwind, Alpine."
+>
+  <!-- ── Hero ─────────────────────────────────────────────────────────── -->
+  <section class="grid-paper relative overflow-hidden border-b-2 border-ink">
+    <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:py-24">
+      <div>
+        <p class="reveal inline-flex items-center gap-2 rounded-full border-2 border-ink bg-card px-3 py-1 font-mono text-xs font-semibold tracking-wide shadow-block-sm">
+          <span class="h-2 w-2 rounded-full bg-vermilion"></span>
+          FREE · NON-PROFIT · BEGINNER-FRIENDLY
+        </p>
+        <h1 class="reveal mt-5 text-balance text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl" style="animation-delay:.05s">
+          Learn the web by building <span class="marker-underline">real things.</span>
+        </h1>
+        <p class="reveal mt-5 max-w-xl text-pretty text-lg text-ink-2 sm:text-xl" style="animation-delay:.1s">
+          A 3-month path from absolute beginner to shipping your own responsive,
+          interactive websites — one small project at a time. No fluff, no tutorial hell.
+        </p>
+        <div class="reveal mt-8 flex flex-wrap items-center gap-3" style="animation-delay:.15s">
+          <a
+            href="/weeks/0"
+            class="inline-flex items-center gap-2 rounded-xl border-2 border-ink bg-vermilion px-5 py-3 font-semibold text-white shadow-block transition-transform hover:-translate-y-0.5 active:translate-y-0 active:shadow-block-sm"
+          >
+            Start Week&nbsp;0 — free <span aria-hidden="true">→</span>
+          </a>
+          <a
+            href="/roadmap"
+            class="inline-flex items-center gap-2 rounded-xl border-2 border-ink bg-card px-5 py-3 font-semibold shadow-block-sm transition-transform hover:-translate-y-0.5"
+          >
+            See the roadmap
+          </a>
+        </div>
+        <p class="reveal mt-5 font-mono text-xs text-ink-3" style="animation-delay:.2s">
+          No signup. No payment. Open your editor and go.
+        </p>
+      </div>
+
+      <!-- Decorative hero composition: a faux browser you'll learn to build -->
+      <div class="reveal relative hidden lg:block" style="animation-delay:.12s" aria-hidden="true">
+        <div class="absolute -right-3 -top-6 z-20 -rotate-6">
+          <span class="inline-block rounded-lg border-2 border-ink bg-honey px-3 py-1.5 font-mono text-xs font-bold shadow-block-sm">⬆ shipped!</span>
+        </div>
+        <div class="rounded-2xl border-2 border-ink bg-card shadow-block-lg">
+          <div class="flex items-center gap-1.5 border-b-2 border-ink px-4 py-3">
+            <span class="h-3 w-3 rounded-full border border-ink bg-vermilion"></span>
+            <span class="h-3 w-3 rounded-full border border-ink bg-honey"></span>
+            <span class="h-3 w-3 rounded-full border border-ink bg-teal"></span>
+            <span class="ml-3 truncate rounded-md bg-paper-2 px-2 py-1 font-mono text-[0.65rem] text-ink-2">yourname.github.io</span>
+          </div>
+          <div class="space-y-3 p-6">
+            <div class="h-2.5 w-24 rounded-full bg-teal"></div>
+            <div class="h-7 w-3/4 rounded-md bg-ink"></div>
+            <div class="h-3 w-full rounded-full bg-paper-3"></div>
+            <div class="h-3 w-5/6 rounded-full bg-paper-3"></div>
+            <div class="flex gap-2 pt-2">
+              <div class="h-9 w-28 rounded-lg border-2 border-ink bg-vermilion"></div>
+              <div class="h-9 w-24 rounded-lg border-2 border-ink bg-card"></div>
+            </div>
+          </div>
+        </div>
+        <div class="absolute -bottom-7 -left-7 z-10 flex gap-2">
+          <span class="rotate-[-4deg] rounded-lg border-2 border-ink bg-card px-2.5 py-1 font-mono text-xs font-semibold shadow-block-sm">&lt;html&gt;</span>
+          <span class="rotate-[3deg] rounded-lg border-2 border-ink bg-card px-2.5 py-1 font-mono text-xs font-semibold shadow-block-sm">.css</span>
+          <span class="rotate-[-2deg] rounded-lg border-2 border-ink bg-card px-2.5 py-1 font-mono text-xs font-semibold shadow-block-sm">js</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Stats ────────────────────────────────────────────────────────── -->
+  <section class="border-b-2 border-ink bg-paper-2">
+    <dl class="mx-auto grid max-w-6xl grid-cols-2 divide-ink/15 px-4 sm:grid-cols-4 sm:px-6 md:divide-x">
+      {
+        stats.map((s) => (
+          <div class="px-2 py-6 text-center">
+            <dt class="font-display text-4xl font-semibold tracking-tight">
+              {s.n}<span class="ml-1 text-lg text-ink-2">{s.u}</span>
+            </dt>
+            <dd class="mt-1 font-mono text-xs uppercase tracking-wide text-ink-3">{s.d}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <!-- ── The toolbench (the stack) ────────────────────────────────────── -->
+  <section class="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+    <div class="max-w-2xl">
+      <p class="font-mono text-xs uppercase tracking-[0.2em] text-vermilion-deep">Your toolbench</p>
+      <h2 class="mt-2 text-balance text-3xl font-semibold tracking-tight sm:text-4xl">Six tools, taught in the right order</h2>
+      <p class="mt-3 text-pretty text-ink-2">
+        We don't dump everything on you at once. Each tool builds on the last — structure
+        first, then style, then behaviour, then the modern shortcuts. You'll know <em>why</em>
+        each one exists.
+      </p>
+    </div>
+    <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        stack.map((s, i) => (
+          <li class="group rounded-[14px] border-2 border-ink bg-card p-5 shadow-block-sm transition-transform hover:-translate-y-1">
+            <div class="flex items-center justify-between gap-2">
+              <span class="font-mono text-2xl font-bold text-ink-3">{String(i + 1).padStart(2, '0')}</span>
+              <TechBadge tech={s.name} />
+            </div>
+            <h3 class="mt-3 font-display text-lg font-semibold">{s.role}</h3>
+            <p class="mt-2 font-mono text-xs text-ink-2">{s.when}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- ── The daily loop ───────────────────────────────────────────────── -->
+  <section class="border-y-2 border-ink bg-ink text-paper">
+    <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+      <div class="max-w-2xl">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-honey">How a day works</p>
+        <h2 class="mt-2 text-balance text-3xl font-semibold tracking-tight text-paper sm:text-4xl">
+          About 90 focused minutes a day
+        </h2>
+        <p class="mt-3 text-pretty text-paper/80">
+          The same simple loop, every day. The secret ingredient is <strong class="text-paper">build&nbsp;alone</strong>:
+          you never just watch — you rebuild it yourself until it's truly yours.
+        </p>
+      </div>
+      <ol class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          loop.map((step, i) => (
+            <li class="relative rounded-[14px] border-2 border-paper/20 bg-paper/5 p-5">
+              <span class="font-mono text-sm font-bold text-honey">{step.k}</span>
+              <h3 class="mt-2 font-display text-xl font-semibold text-paper">{step.t}</h3>
+              <p class="mt-2 text-sm text-paper/75">{step.d}</p>
+              {i < loop.length - 1 && (
+                <span class="absolute -right-3 top-1/2 z-10 hidden -translate-y-1/2 font-mono text-paper/40 lg:block" aria-hidden="true">→</span>
+              )}
+            </li>
+          ))
+        }
+      </ol>
+      <p class="mt-8 font-mono text-sm text-paper/70">
+        + a build-from-scratch <span class="text-honey">project every weekend</span>, deployed to the real internet.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── Roadmap preview ──────────────────────────────────────────────── -->
+  <section class="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div class="max-w-2xl">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-vermilion-deep">The journey</p>
+        <h2 class="mt-2 text-balance text-3xl font-semibold tracking-tight sm:text-4xl">Five stops, zero to shipped</h2>
+      </div>
+      <a href="/roadmap" class="inline-flex items-center gap-1.5 font-semibold underline-offset-4 hover:text-vermilion-deep hover:underline">
+        Full week-by-week roadmap <span aria-hidden="true">→</span>
+      </a>
+    </div>
+    <ol class="mt-10 grid gap-4 md:grid-cols-5">
+      {
+        phases.map((p) => (
+          <li class="rounded-[14px] border-2 border-ink bg-card p-5 shadow-block-sm">
+            <span class="inline-block h-3 w-3 rounded-full border border-ink" style={`background:${p.hex}`} />
+            <p class="mt-3 font-mono text-xs text-ink-3">{p.weeks}</p>
+            <h3 class="mt-1 font-display text-lg font-semibold">{p.name}</h3>
+            <p class="mt-2 text-sm text-ink-2">{p.blurb}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <!-- ── Outcomes + honesty ───────────────────────────────────────────── -->
+  <section class="border-t-2 border-ink bg-paper-2">
+    <div class="mx-auto grid max-w-6xl gap-6 px-4 py-20 sm:px-6 lg:grid-cols-2">
+      <div class="rounded-[14px] border-2 border-ink bg-card p-7 shadow-block">
+        <h2 class="font-display text-2xl font-semibold">When you finish, you can…</h2>
+        <ul class="mt-4 space-y-2.5">
+          {
+            [
+              'Build & deploy responsive, multi-page websites',
+              'Write HTML, CSS, JavaScript, Tailwind & Alpine with confidence',
+              'Pull live data from real APIs and handle it gracefully',
+              'Debug anything with browser DevTools',
+              'Ship to the web with Git & GitHub',
+              'Show off an 11-project portfolio + a capstone',
+            ].map((o) => (
+              <li class="flex items-start gap-2.5">
+                <span class="mt-0.5 font-bold text-teal-deep" aria-hidden="true">✓</span>
+                <span>{o}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="rounded-[14px] border-2 border-dashed border-ink/50 bg-paper p-7">
+        <h2 class="font-display text-2xl font-semibold">Let's be honest</h2>
+        <p class="mt-4 text-pretty text-ink-2">
+          This is a <strong>foundational front-end</strong> course. In ~120 hours you'll
+          become genuinely dangerous with the building blocks of the web — but you won't be
+          a job-ready full-stack engineer yet. Frameworks like React, backends, and
+          databases are the <em>next</em> path, and we point you to them at the end.
+        </p>
+        <p class="mt-4 rounded-lg border-l-4 border-vermilion bg-vermilion/8 px-4 py-3 text-sm">
+          We'd rather tell you the truth than sell you a fantasy. Honest expectations are
+          how people actually finish.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── AI-era note ──────────────────────────────────────────────────── -->
+  <section class="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+    <div class="grid items-center gap-8 rounded-[14px] border-2 border-ink bg-card p-7 shadow-block sm:p-10 lg:grid-cols-[1.4fr_1fr]">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-vermilion-deep">Learning in 2026</p>
+        <h2 class="mt-2 text-balance text-3xl font-semibold tracking-tight">Use AI to learn — not to skip learning</h2>
+        <p class="mt-3 text-pretty text-ink-2">
+          AI can write code in seconds, which is exactly why beginners have to be careful.
+          We teach you to use it as a patient tutor with clear rules, so you can always
+          <strong> verify and explain</strong> every line you ship. That skill is the new core skill.
+        </p>
+        <a href="/how-it-works#ai" class="mt-5 inline-flex items-center gap-1.5 font-semibold underline-offset-4 hover:text-vermilion-deep hover:underline">
+          Read our AI code-of-conduct <span aria-hidden="true">→</span>
+        </a>
+      </div>
+      <ul class="space-y-2.5 font-mono text-sm">
+        <li class="rounded-lg border border-ink/20 bg-paper-2 p-3">“If the AI vanished tomorrow, could I still solve this?”</li>
+        <li class="rounded-lg border border-ink/20 bg-paper-2 p-3">One <span class="text-vermilion-deep">AI-free rep</span> per concept.</li>
+        <li class="rounded-lg border border-ink/20 bg-paper-2 p-3">Ask for <span class="text-vermilion-deep">lessons</span>, not answers.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ── Final CTA ────────────────────────────────────────────────────── -->
+  <section class="border-t-2 border-ink bg-vermilion-deep text-white">
+    <div class="mx-auto max-w-6xl px-4 py-20 text-center sm:px-6">
+      <h2 class="mx-auto max-w-2xl text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
+        Your first website is one afternoon away.
+      </h2>
+      <p class="mx-auto mt-4 max-w-xl text-pretty text-lg text-white/85">
+        Start with Week 0 today, and you'll have something live on the internet by the end of Week 1.
+      </p>
+      <a
+        href="/weeks/0"
+        class="mt-8 inline-flex items-center gap-2 rounded-xl border-2 border-ink bg-card px-6 py-3.5 text-lg font-semibold text-ink shadow-block transition-transform hover:-translate-y-0.5 active:translate-y-0 active:shadow-block-sm"
+      >
+        Start the free course <span aria-hidden="true">→</span>
+      </a>
+      <p class="mt-5 font-mono text-sm text-white/80">Click, build, ship.</p>
+    </div>
+  </section>
+</BaseLayout>

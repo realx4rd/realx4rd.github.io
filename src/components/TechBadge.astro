@@ -1,0 +1,26 @@
+---
+interface Props {
+  tech: string;
+}
+const { tech } = Astro.props;
+
+// Static class strings so Tailwind's scanner keeps them.
+const map: Record<string, string> = {
+  HTML: 'border-vermilion/40 bg-vermilion/10 text-vermilion-deep',
+  CSS: 'border-teal/40 bg-teal/10 text-teal-deep',
+  JavaScript: 'border-honey-deep/45 bg-honey/20 text-honey-deep',
+  'Tailwind CSS': 'border-teal/40 bg-teal/10 text-teal-deep',
+  'Alpine.js': 'border-plum/40 bg-plum/10 text-plum',
+  jQuery: 'border-ink/30 bg-ink/5 text-ink-2',
+};
+const cls = map[tech] ?? 'border-ink/25 bg-ink/5 text-ink-2';
+---
+
+<span
+  class:list={[
+    'inline-flex items-center rounded-md border px-2 py-0.5 font-mono text-[0.68rem] font-semibold',
+    cls,
+  ]}
+>
+  {tech}
+</span>

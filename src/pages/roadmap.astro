@@ -1,0 +1,106 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TechBadge from '../components/TechBadge.astro';
+import { phases } from '../data/phases';
+
+const weeks = (await getCollection('weeks')).sort((a, b) => a.data.week - b.data.week);
+const groups = phases.map((phase) => ({
+  phase,
+  weeks: weeks.filter((w) => w.data.phaseNumber === phase.number),
+}));
+
+const totalHours = weeks.reduce((sum, w) => sum + w.data.hours, 0);
+const label = (n: number) => (n === 0 ? 'Wk 0' : `Wk ${n}`);
+---
+
+<BaseLayout
+  title="Roadmap"
+  description="The full week-by-week roadmap: Week 0 onboarding plus 12 weeks across HTML, CSS, JavaScript, Tailwind, Alpine and a jQuery overview — every week with a deployed project."
+>
+  <section class="grid-paper border-b-2 border-ink">
+    <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+      <p class="font-mono text-xs uppercase tracking-[0.2em] text-vermilion-deep">The roadmap</p>
+      <h1 class="mt-2 text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
+        Week 0 + 12 weeks, start to ship
+      </h1>
+      <p class="mt-4 max-w-2xl text-pretty text-lg text-ink-2">
+        A guided path with a deployed project at the end of every single week. Roughly
+        {totalHours} hours total — about 1–2 hours a day for three months.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-2">
+        {
+          phases.map((p) => (
+            <span class="inline-flex items-center gap-2 rounded-full border-2 border-ink bg-card px-3 py-1 font-mono text-xs">
+              <span class="h-2.5 w-2.5 rounded-full" style={`background:${p.hex}`} />
+              {p.name}
+            </span>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <div class="mx-auto max-w-4xl px-4 py-14 sm:px-6">
+    {
+      groups.map(({ phase, weeks: phaseWeeks }) => (
+        <section class="mb-14">
+          <div class="flex items-baseline gap-3">
+            <span class="font-mono text-sm font-bold" style={`color:${phase.hex}`}>
+              {String(phase.number).padStart(2, '0')}
+            </span>
+            <h2 class="font-display text-2xl font-semibold">{phase.name}</h2>
+            <span class="font-mono text-xs text-ink-3">{phase.weeks}</span>
+          </div>
+          <p class="mt-1 max-w-2xl text-sm text-ink-2">{phase.blurb}</p>
+
+          <ol class="mt-5 space-y-3 border-l-2 pl-5 sm:pl-7" style={`border-color:${phase.hex}`}>
+            {phaseWeeks.map((w) => (
+              <li class="relative">
+                <span
+                  class="absolute -left-[1.65rem] top-5 h-3.5 w-3.5 rounded-full border-2 border-ink sm:-left-[2.15rem]"
+                  style={`background:${phase.hex}`}
+                  aria-hidden="true"
+                />
+                <a
+                  href={`/weeks/${w.data.week}`}
+                  class="group flex flex-col gap-3 rounded-[14px] border-2 border-ink bg-card p-5 shadow-block-sm transition-transform hover:-translate-y-0.5 sm:flex-row sm:items-center"
+                >
+                  <span class="inline-flex h-12 w-14 shrink-0 items-center justify-center rounded-xl border-2 border-ink bg-paper-2 font-mono text-xs font-bold leading-tight">
+                    {label(w.data.week)}
+                  </span>
+                  <div class="min-w-0 flex-1">
+                    <div class="flex flex-wrap items-center gap-2">
+                      <h3 class="font-display text-lg font-semibold group-hover:text-vermilion-deep">{w.data.title}</h3>
+                      {w.data.milestone && (
+                        <span class="rounded-full border-2 border-ink bg-honey px-2 py-0.5 font-mono text-[0.62rem] font-bold">★ MILESTONE</span>
+                      )}
+                    </div>
+                    <p class="mt-0.5 text-sm text-ink-2">{w.data.focus}</p>
+                    <div class="mt-2 flex flex-wrap items-center gap-1.5">
+                      {w.data.tech.map((t) => (
+                        <TechBadge tech={t} />
+                      ))}
+                    </div>
+                  </div>
+                  <span class="hidden shrink-0 font-mono text-xs text-ink-3 sm:block">~{w.data.hours}h →</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ))
+    }
+
+    <div class="rounded-[14px] border-2 border-ink bg-ink p-7 text-center text-paper shadow-block">
+      <h2 class="font-display text-2xl font-semibold text-paper">Ready when you are.</h2>
+      <p class="mx-auto mt-2 max-w-md text-paper/80">Begin with the Launch Pad — get your tools set up and make your first commit.</p>
+      <a
+        href="/weeks/0"
+        class="mt-5 inline-flex items-center gap-2 rounded-xl border-2 border-ink bg-vermilion px-5 py-3 font-semibold text-white shadow-block-sm transition-transform hover:-translate-y-0.5"
+      >
+        Start Week 0 <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</BaseLayout>
