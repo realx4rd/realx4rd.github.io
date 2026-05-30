@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://clickandlearn.academy/sitemap-index.xml
+Sitemap: https://realx4rd.github.io/sitemap-index.xml

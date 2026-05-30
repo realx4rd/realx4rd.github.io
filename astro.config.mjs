@@ -6,8 +6,8 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  // Update `site` to your real domain before deploying (used for canonical URLs + sitemap).
-  site: 'https://clickandlearn.academy',
+  // Your GitHub Pages URL. Change this if you later add a custom domain.
+  site: 'https://realx4rd.github.io',
   integrations: [alpinejs(), sitemap()],
   vite: {
     plugins: [tailwindcss()],
