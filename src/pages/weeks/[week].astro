@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import TechBadge from '../../components/TechBadge.astro';
+import DayCard from '../../components/DayCard.astro';
 import ProgressChecklist from '../../components/ProgressChecklist.astro';
 import { phaseByNumber } from '../../data/phases';
 
@@ -85,38 +86,7 @@ const pageTitle = `${labelFor(d.week)}: ${d.title}`;
       <h2 class="mt-12 font-display text-2xl font-semibold">The week, day by day</h2>
       <p class="mt-1 text-sm text-ink-2">Each day ≈ 1.5&nbsp;hrs: learn briefly, build along, then build it again on your own.</p>
       <ol class="mt-5 space-y-4">
-        {
-          d.days.map((day) => (
-            <li class="rounded-[14px] border-2 border-ink bg-card shadow-block-sm">
-              <div class="flex flex-col gap-4 p-5 sm:flex-row">
-                <div class="shrink-0">
-                  <span class="inline-flex h-12 w-12 items-center justify-center rounded-xl border-2 border-ink bg-paper-2 font-mono text-sm font-bold">
-                    D{day.n}
-                  </span>
-                </div>
-                <div class="min-w-0 flex-1">
-                  <h3 class="font-display text-lg font-semibold">{day.topic}</h3>
-                  <dl class="mt-2 space-y-1.5 text-sm">
-                    <div class="flex gap-2">
-                      <dt class="w-14 shrink-0 font-mono text-xs uppercase tracking-wide text-ink-3">Learn</dt>
-                      <dd class="text-ink-2">{day.learn}</dd>
-                    </div>
-                    {day.build && (
-                      <div class="flex gap-2">
-                        <dt class="w-14 shrink-0 font-mono text-xs uppercase tracking-wide text-ink-3">Build</dt>
-                        <dd class="text-ink-2">{day.build}</dd>
-                      </div>
-                    )}
-                  </dl>
-                  <div class="mt-3 rounded-lg border-l-4 border-vermilion bg-vermilion/8 px-3 py-2">
-                    <span class="font-mono text-xs font-semibold uppercase tracking-wide text-vermilion-deep">Do it →</span>
-                    <p class="mt-0.5 text-sm">{day.assignment}</p>
-                  </div>
-                </div>
-              </div>
-            </li>
-          ))
-        }
+        {d.days.map((day) => <DayCard day={day} week={d.week} />)}
       </ol>
 
       <!-- Project / deliverable -->

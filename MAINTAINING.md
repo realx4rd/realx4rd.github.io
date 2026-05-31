@@ -1,106 +1,139 @@
-# Maintainer's guide
+# Maintaining Click & Learn Academy
 
-You do **not** need to know Astro, JavaScript, or any framework to maintain the course
-content. Everything students read lives in **Markdown** files. This guide shows you how.
+This guide is for **content maintainers** — no coding experience needed.
+You edit simple text files; the website updates itself.
 
 ---
 
-## 1. Edit a week's lesson
+## The one thing to understand
 
-Every week is one file in `src/content/weeks/`, named `week-00.md` … `week-12.md`.
+**All course content lives in Markdown files** in `src/content/weeks/`.
+Each week is one file: `week-00.md`, `week-01.md`, … `week-12.md`.
+You edit those files. That's it. The site rebuilds from them automatically.
 
-Open the file. The top part (between the `---` lines) is the **frontmatter** — structured
-data that fills in the page. Below it is the **lesson write-up** in plain Markdown.
+---
 
-Change the text, save the file, and the site updates automatically while `npm run dev` is
-running. That's it.
+## Editing a week
 
-### The frontmatter fields
+Open any `week-XX.md` file. The top part (between the `---` lines) is the
+**frontmatter** — structured fields the site reads. Below it is freeform
+Markdown for the longer lesson notes.
+
+### The fields
 
 ```yaml
----
-week: 1                         # 0–12 (0 = the Launch Pad)
-title: "HTML + web literacy"    # the week's name
-focus: "How the web works…"     # one-line tagline
-phase: "Foundations"            # Launch Pad | Foundations | JavaScript | Modern Tooling | Capstone
-phaseNumber: 1                  # 0 | 1 | 2 | 3 | 4  (must match the phase above)
-hours: 9                        # estimated hours
-tech: ["HTML"]                  # badges shown on the card
-objectives:                     # "by the end you can…" bullets
-  - "Explain how the web works."
-days:                           # the 5 daily lessons
+week: 1                      # which week (0–12)
+title: "HTML + web literacy" # the week's name
+focus: "..."                 # one-line summary shown on cards
+phase: "Foundations"         # Launch Pad | Foundations | JavaScript | Modern Tooling | Capstone
+phaseNumber: 1               # 0–4 (groups weeks on the roadmap)
+hours: 9                     # estimated hours
+tech: ["HTML"]               # tech tags shown as badges
+objectives:                  # 3–5 bullet points
+  - "Understand how the web works"
+days:                        # the daily breakdown (see below)
   - n: 1
-    topic: "How the web works"  # the day's title
-    learn: "Read about…"        # the 20-min learn slot
-    build: "Follow along to…"   # the guided code-along (optional)
-    assignment: "On your own…"  # the blank-slate exercise
-project:                        # the weekend project (omit for Week 0)
-  title: "Your About Me page"
-  brief: "A short description."
-  deploy: "GitHub Pages"        # optional
-  rubric:                       # self/peer-review checklist
-    - "Uses semantic HTML"
-deliverable: "…"                # use INSTEAD of project for setup weeks (Week 0)
-milestone: false                # true marks a phase milestone (gold star)
-proSkills: ["Git ritual"]       # pro-skill threads active this week
-resources:                      # free links shown in the sidebar
-  - label: "MDN — HTML"
-    url: "https://developer.mozilla.org/…"
+    topic: "..."             # the day's concept
+    learn: "..."             # what to read/watch (the ~20-min slot)
+    build: "..."             # the guided code-along
+    assignment: "..."        # the do-it-alone exercise
+project:                     # the weekend project
+  title: "..."
+  brief: "..."
+  deploy: "GitHub Pages"
+  rubric:
+    - "..."
+milestone: false             # true only for phase-final weeks
+proSkills: ["Git ritual"]    # cross-cutting skills practiced
+resources:                   # free links shown in the sidebar
+  - label: "MDN"
+    url: "https://..."
 ---
-
-Your lesson write-up goes here, in normal Markdown.
 ```
 
-### Rules that keep the build working
+### Optional "go deeper" fields on a day
 
-- Keep the `---` fences at the very top and bottom of the frontmatter.
-- **Wrap every text value in "double quotes"** (it safely handles apostrophes and colons).
-- Numbers (`week`, `hours`, `n`) and `true`/`false` are **not** quoted.
-- Every `resources` URL must start with `https://`.
-- `phase` and `phaseNumber` must match (see the table above).
+Each day can include up to five **optional** extra fields. When a day has any
+of them, the site shows a **"Details, steps & resources"** toggle on that day's
+card — collapsed by default, so the page stays clean. Leave them out and the day
+simply shows no toggle. Add as many or as few as you like.
 
-If a value breaks the rules, `npm run dev` will print a clear error naming the file and
-field — fix it and save.
+```yaml
+days:
+  - n: 1
+    topic: "The box model"
+    learn: "..."
+    build: "..."
+    assignment: "..."
+    # ---- optional from here down ----
+    time: "~90 min"          # shown as a small pill next to the day number
+    details: "..."           # 2–4 sentences: what it is, why it matters
+    steps:                   # a numbered build walkthrough
+      - "First, do this"
+      - "Then do that"
+    stuck: "..."             # one short 'if you're stuck, try this' hint
+    resources:               # 2–3 precise links for THIS day's topic
+      - label: "MDN — The box model"
+        url: "https://developer.mozilla.org/..."
+```
+
+**Tip:** day-level `resources` are for the *exact* page a learner needs that day
+(a specific MDN article, a single video). The week-level `resources:` block
+(further down the file) is the broader reading list for the whole week.
+
+> Weeks 0–4 are fully authored with these fields and make the best template to
+> copy from. Weeks 5–12 don't have them yet — adding them is the next content task.
+
+### Rules that keep the site working
+
+1. **Keep the quotes.** Text values go in `"double quotes"`.
+2. **Don't change the field names.** `topic:`, `learn:`, etc. must stay as-is.
+3. **Indentation matters.** Use 2 spaces, never tabs. Each `steps:`/`resources:`
+   item is indented one more level than its field.
+4. **URLs need `https://`.** And keep them in quotes.
+5. After saving, the dev server reloads automatically.
 
 ---
 
-## 2. Add a brand-new week
+## Adding a brand-new week
 
-1. Copy an existing file, e.g. `week-05.md`, to a new name like `week-13.md`.
-2. Change the `week:` number and all the content.
-3. Save. The roadmap, week page, and navigation update **automatically** — the new week
-   slots itself into the right phase by its `phaseNumber`.
+1. Copy an existing file (e.g. `cp src/content/weeks/week-01.md src/content/weeks/week-13.md`).
+2. Change `week:` to the new number and update the content.
+3. Set `phase` / `phaseNumber` so it lands in the right roadmap group.
+4. Save. The week appears automatically — no other files to touch.
 
----
-
-## 3. Change the branding
-
-- **Site name, footer, social tags:** `src/layouts/BaseLayout.astro` and
-  `src/components/Footer.astro`.
-- **Navigation links:** the `nav` array at the top of `src/components/Header.astro`.
-- **Colours & fonts:** `src/styles/global.css`, in the `@theme { … }` block at the top.
-  Each `--color-*` and `--font-*` token flows through the whole site. If you change a
-  colour, re-check contrast at <https://webaim.org/resources/contrastchecker/> — the
-  course teaches accessibility, so the site should pass (AA, 4.5:1 for text).
-- **Phase names/colours:** `src/data/phases.ts`.
-- **Logo mark:** `src/components/Logo.astro`.
+**The build broke?** 99% of the time it's a YAML indentation or quote issue.
+Check the file you just edited against the rules above.
 
 ---
 
-## 4. The social share image
+## Previewing and deploying
 
-`public/og.svg` is the image shown when someone shares a link. SVG works, but some
-platforms render PNG more reliably — for best results, export a **1200×630 PNG**, save it
-as `public/og.png`, and change the `image` default in `src/layouts/BaseLayout.astro` from
-`/og.svg` to `/og.png`.
+Run these from the project folder in a terminal:
+
+```bash
+npm install     # first time only
+npm run dev     # preview locally at http://localhost:4321
+npm run build   # check it builds cleanly before publishing
+```
+
+Deployment is automatic: pushing to the `main` branch on GitHub triggers the
+GitHub Actions workflow (`.github/workflows/deploy.yml`), which builds the site
+and publishes it to **https://realx4rd.github.io**. Just commit and push:
+
+```bash
+git add -A
+git commit -m "Update week 5 content"
+git push
+```
+
+Give it 1–2 minutes, then refresh the live site.
 
 ---
 
-## 5. Before you publish
+## Need help?
 
-- [ ] Set your real domain in `astro.config.mjs` (the `site:` line) and in `public/robots.txt`.
-- [ ] Run `npm run build` — it should finish with no errors.
-- [ ] Skim the new pages with `npm run preview`.
-- [ ] (Optional) Replace `public/og.svg` with a PNG (see above).
-
-Deployment steps are in **[README.md](./README.md)**.
+- **Content/YAML questions:** re-read the rules above; compare your file to a
+  working week (weeks 0–4 are good references).
+- **Build or deploy errors:** check the repo's **Actions** tab on GitHub for the
+  red ✗ and the error message it prints.
