@@ -1,7 +1,7 @@
 /**
  * The Freelancer Journey — the multi-year arc layered on top of the 12-week course.
  *
- * Year 1 is the deep, full FOUNDATION (~900 hrs ≈ 6 months at full-time pace) that takes a
+ * Year 1 is the deep, full FOUNDATION (~830 hrs ≈ ~6 months at full-time pace) that takes a
  * complete beginner to genuinely market-ready BEFORE going pro. Years 2–4 are previews of
  * the long climb.
  *
@@ -51,7 +51,7 @@ export const year1Phases: FoundationPhase[] = [
     key: 'launch',
     number: 0,
     name: 'Launch Pad & Mental Models',
-    hours: 40,
+    hours: 23,
     blurb:
       'Adopt a how-to-learn mindset, understand how computers and the web really work, and set up a real developer workshop — before any heavy code.',
     hex: '#80705c',
@@ -77,7 +77,7 @@ export const year1Phases: FoundationPhase[] = [
     key: 'structure-style',
     number: 2,
     name: 'Structure & Style',
-    hours: 80,
+    hours: 60,
     blurb:
       'Build accessible, responsive pages with semantic HTML and modern CSS — and ship them to the real internet.',
     hex: '#0f6f63',
@@ -93,7 +93,7 @@ export const year1Phases: FoundationPhase[] = [
     key: 'javascript',
     number: 3,
     name: 'JavaScript, Deep',
-    hours: 130,
+    hours: 98,
     blurb:
       'Make pages think: logic, the DOM, events, and live data — then go beyond the basics into modern, professional JavaScript.',
     hex: '#d63c11',
@@ -110,7 +110,7 @@ export const year1Phases: FoundationPhase[] = [
     key: 'tooling-ship',
     number: 4,
     name: 'Modern Tooling & Ship',
-    hours: 60,
+    hours: 52,
     blurb:
       'Move faster with Tailwind and Alpine, then deploy real projects with confidence — environments, domains, and performance.',
     hex: '#b3760a',

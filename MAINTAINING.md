@@ -107,6 +107,47 @@ Check the file you just edited against the rules above.
 
 ---
 
+## The freelancer foundation track (Year 1)
+
+Alongside the 12-week course, the site has a **Year-1 freelancer foundation** — a deeper,
+10-phase path from beginner to earning freelancer. It lives in two places:
+
+- **Structure** (phases, order, pace table, the 4-year arc, milestone ladder, lanes):
+  `src/data/journey.ts`.
+- **Lessons**: `src/content/modules/*.md` — one file per module, the **same format as a week**
+  (minus the `week`/`phase`/`phaseNumber` fields). Reused course weeks also appear in the
+  foundation; `journey.ts` references them by number, so you don't duplicate them.
+
+### Editing a module
+
+Open any `src/content/modules/<name>.md`. The frontmatter mirrors a week's: `title`, `focus`,
+`hours`, `tech`, `objectives`, `days` (same day shape, including optional
+`details`/`steps`/`stuck`/`resources`), `project` **or** `deliverable`, `milestone`,
+`proSkills`, `resources`. Same YAML rules as weeks apply.
+
+### Adding a module
+
+1. Create `src/content/modules/my-module.md` (copy an existing module).
+2. Add it to a phase in `src/data/journey.ts`: find that phase's `items` array and add
+   `{ kind: 'module', slug: 'my-module' }` in the right position. **The filename is the slug.**
+3. Save. It appears on `/foundation`, gets its own page at `/foundation/my-module`, and slots
+   into the prev/next flow automatically.
+
+To place a reused course week in a phase, use `{ kind: 'week', week: 5 }` instead.
+Until a referenced module file exists, it shows as a muted **"coming soon"** card — so you can
+sketch the whole roadmap first and fill in lessons over time.
+
+### The pages
+
+- `/foundation` — the Year-1 timeline (phases → weeks + modules), pace table, freelance thread, lanes.
+- `/journey` — the 4-year arc + milestone ladder.
+- `/start-here` — the on-ramp.
+
+Phase colours, hour estimates, the pace table, and the milestone ladder all live in
+`journey.ts` — edit data there, not markup.
+
+---
+
 ## Previewing and deploying
 
 Run these from the project folder in a terminal:
