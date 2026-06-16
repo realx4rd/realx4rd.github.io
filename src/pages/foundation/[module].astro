@@ -1,0 +1,247 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TechBadge from '../../components/TechBadge.astro';
+import DayCard from '../../components/DayCard.astro';
+import ProgressChecklist from '../../components/ProgressChecklist.astro';
+import { foundationSequence, phaseForModule } from '../../data/journey';
+
+export async function getStaticPaths() {
+  const weeks = await getCollection('weeks');
+  const modules = await getCollection('modules');
+  const weekByNum = (n: number) => weeks.find((w) => w.data.week === n);
+  const moduleBySlug = (s: string) => modules.find((m) => m.id === s);
+
+  // Resolve the entire foundation sequence (weeks + modules) into nav targets,
+  // so prev/next on a module page can point at either a course week or another module.
+  const resolved = foundationSequence.map(({ item }) => {
+    if (item.kind === 'week') {
+      const w = weekByNum(item.week);
+      return {
+        key: `week-${item.week}`,
+        exists: !!w,
+        href: `/weeks/${item.week}`,
+        kicker: item.week === 0 ? 'Launch Pad' : `Week ${item.week}`,
+        title: w?.data.title ?? `Week ${item.week}`,
+      };
+    }
+    const m = moduleBySlug(item.slug);
+    return {
+      key: `module-${item.slug}`,
+      exists: !!m,
+      href: `/foundation/${item.slug}`,
+      kicker: 'Module',
+      title: m?.data.title ?? item.slug,
+    };
+  });
+
+  const nearest = (from: number, dir: -1 | 1) => {
+    for (let i = from + dir; i >= 0 && i < resolved.length; i += dir) {
+      if (resolved[i].exists) return resolved[i];
+    }
+    return null;
+  };
+
+  return modules.map((entry) => {
+    const idx = resolved.findIndex((r) => r.key === `module-${entry.id}`);
+    return {
+      params: { module: entry.id },
+      props: {
+        entry,
+        prev: idx >= 0 ? nearest(idx, -1) : null,
+        next: idx >= 0 ? nearest(idx, 1) : null,
+      },
+    };
+  });
+}
+
+const { entry, prev, next } = Astro.props;
+const d = entry.data;
+const phase = phaseForModule(entry.id);
+const { Content } = await render(entry);
+
+const checklistItems = [
+  ...d.days.map((day) => ({ id: `d${day.n}`, label: `Day ${day.n}: ${day.topic}` })),
+  ...(d.project
+    ? [{ id: 'project', label: `Project: ${d.project.title}` }]
+    : d.deliverable
+      ? [{ id: 'deliverable', label: 'Module deliverable' }]
+      : []),
+];
+
+const phaseHex = phase?.hex ?? '#80705c';
+---
+
+<BaseLayout title={d.title} description={d.focus} ogType="article">
+  <!-- Header band -->
+  <section class="grid-paper border-b-2 border-ink">
+    <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+      <a href="/foundation" class="inline-flex items-center gap-1.5 font-mono text-xs text-ink-2 underline-offset-4 hover:text-vermilion-deep hover:underline">
+        <span aria-hidden="true">←</span> Year 1 — The Foundation
+      </a>
+      <div class="mt-4 flex flex-wrap items-center gap-3">
+        {
+          phase && (
+            <span
+              class="inline-flex items-center gap-2 rounded-full border-2 border-ink bg-card px-3 py-1 font-mono text-xs font-semibold"
+              style={`color:${phaseHex}`}
+            >
+              <span class="h-2.5 w-2.5 rounded-full" style={`background:${phaseHex}`} />
+              Phase {phase.number} · {phase.name}
+            </span>
+          )
+        }
+        {
+          d.milestone && (
+            <span class="inline-flex items-center gap-1 rounded-full border-2 border-ink bg-honey px-2.5 py-1 font-mono text-xs font-semibold">
+              ★ Milestone
+            </span>
+          )
+        }
+      </div>
+      <h1 class="reveal mt-4 max-w-3xl text-balance text-4xl font-semibold tracking-tight sm:text-5xl">{d.title}</h1>
+      <p class="reveal mt-3 max-w-2xl text-pretty text-lg text-ink-2" style="animation-delay:.05s">{d.focus}</p>
+      <div class="mt-5 flex flex-wrap items-center gap-2">
+        {d.tech.map((t) => <TechBadge tech={t} />)}
+        <span class="ml-1 font-mono text-xs text-ink-2">~{d.hours} hrs · {d.days.length} days</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1fr_320px]">
+    <article class="min-w-0">
+      <!-- Objectives -->
+      <h2 class="font-mono text-xs uppercase tracking-[0.2em] text-ink-3">By the end of this module, you can</h2>
+      <ul class="mt-4 grid gap-2.5 sm:grid-cols-2">
+        {
+          d.objectives.map((o) => (
+            <li class="flex items-start gap-2.5 rounded-xl border border-ink/15 bg-card p-3 text-sm">
+              <span class="mt-0.5 text-teal-deep" aria-hidden="true">✓</span>
+              <span>{o}</span>
+            </li>
+          ))
+        }
+      </ul>
+
+      <!-- Daily breakdown -->
+      {
+        d.days.length > 0 && (
+          <>
+            <h2 class="mt-12 font-display text-2xl font-semibold">Day by day</h2>
+            <p class="mt-1 text-sm text-ink-2">Learn briefly, build along, then build it again on your own.</p>
+            <ol class="mt-5 space-y-4">
+              {d.days.map((day) => (
+                <DayCard day={day} week={entry.id} />
+              ))}
+            </ol>
+          </>
+        )
+      }
+
+      <!-- Project / deliverable -->
+      {
+        d.project && (
+          <div class="mt-12 overflow-hidden rounded-[14px] border-2 border-ink bg-ink text-paper shadow-block">
+            <div class="border-b-2 border-paper/15 px-6 py-4">
+              <span class="font-mono text-xs uppercase tracking-[0.2em] text-honey">Project · ship it</span>
+              <h2 class="mt-1 font-display text-2xl font-semibold text-paper">{d.project.title}</h2>
+            </div>
+            <div class="px-6 py-5">
+              <p class="text-pretty text-paper/85">{d.project.brief}</p>
+              {d.project.deploy && (
+                <p class="mt-3 inline-flex items-center gap-2 rounded-lg bg-paper/10 px-3 py-1.5 font-mono text-xs text-paper/90">
+                  <span aria-hidden="true">⬆</span> Deploy to {d.project.deploy}
+                </p>
+              )}
+              <h3 class="mt-5 font-mono text-xs uppercase tracking-[0.2em] text-paper/60">Self / peer-review checklist</h3>
+              <ul class="mt-2 space-y-1.5">
+                {d.project.rubric.map((r) => (
+                  <li class="flex items-start gap-2.5 text-sm text-paper/90">
+                    <span class="mt-0.5 text-honey" aria-hidden="true">◻</span>
+                    <span>{r}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )
+      }
+      {
+        d.deliverable && (
+          <div class="mt-12 rounded-[14px] border-2 border-ink bg-honey/20 p-6 shadow-block">
+            <span class="font-mono text-xs uppercase tracking-[0.2em] text-honey-deep">This module's deliverable</span>
+            <p class="mt-2 text-pretty text-lg font-medium">{d.deliverable}</p>
+          </div>
+        )
+      }
+
+      <!-- Markdown body -->
+      <div class="lesson-prose mt-12 max-w-2xl">
+        <Content />
+      </div>
+
+      <!-- Prev / next -->
+      <nav class="mt-14 grid gap-3 border-t-2 border-ink/15 pt-6 sm:grid-cols-2" aria-label="Foundation navigation">
+        {
+          prev ? (
+            <a href={prev.href} class="group rounded-xl border-2 border-ink bg-card p-4 shadow-block-sm transition-transform hover:-translate-y-0.5">
+              <span class="font-mono text-xs text-ink-3">← {prev.kicker}</span>
+              <span class="mt-1 block font-display font-semibold group-hover:text-vermilion-deep">{prev.title}</span>
+            </a>
+          ) : (
+            <span />
+          )
+        }
+        {
+          next ? (
+            <a href={next.href} class="group rounded-xl border-2 border-ink bg-card p-4 text-right shadow-block-sm transition-transform hover:-translate-y-0.5">
+              <span class="font-mono text-xs text-ink-3">{next.kicker} →</span>
+              <span class="mt-1 block font-display font-semibold group-hover:text-vermilion-deep">{next.title}</span>
+            </a>
+          ) : (
+            <a href="/foundation" class="group rounded-xl border-2 border-ink bg-honey/20 p-4 text-right shadow-block-sm transition-transform hover:-translate-y-0.5">
+              <span class="font-mono text-xs text-ink-3">Finished →</span>
+              <span class="mt-1 block font-display font-semibold">Back to Year 1</span>
+            </a>
+          )
+        }
+      </nav>
+    </article>
+
+    <!-- Sidebar -->
+    <aside class="space-y-6 lg:sticky lg:top-24 lg:self-start">
+      <ProgressChecklist storageKey={`clala:module-${entry.id}`} items={checklistItems} title="Track this module" />
+
+      {
+        d.proSkills.length > 0 && (
+          <div class="rounded-[14px] border-2 border-ink bg-card p-5">
+            <h2 class="font-mono text-xs uppercase tracking-[0.2em] text-ink-3">Pro-skills in play</h2>
+            <ul class="mt-3 flex flex-wrap gap-2">
+              {d.proSkills.map((p) => (
+                <li class="rounded-md border border-ink/20 bg-paper-2 px-2.5 py-1 text-xs font-medium">{p}</li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+
+      {
+        d.resources.length > 0 && (
+          <div class="rounded-[14px] border-2 border-ink bg-card p-5">
+            <h2 class="font-mono text-xs uppercase tracking-[0.2em] text-ink-3">Free resources</h2>
+            <ul class="mt-3 space-y-2.5">
+              {d.resources.map((r) => (
+                <li>
+                  <a href={r.url} target="_blank" rel="noopener noreferrer" class="group flex items-start gap-2 text-sm">
+                    <span class="mt-0.5 text-vermilion" aria-hidden="true">↗</span>
+                    <span class="underline-offset-4 group-hover:text-vermilion-deep group-hover:underline">{r.label}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+    </aside>
+  </div>
+</BaseLayout>

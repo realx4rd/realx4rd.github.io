@@ -53,4 +53,34 @@ const weeks = defineCollection({
   }),
 });
 
-export const collections = { weeks };
+/**
+ * The new freelancer-foundation lessons live in `src/content/modules/*.md`.
+ * Same day/project shapes as `weeks` (so DayCard etc. are reused), minus the
+ * course-specific week fields. Ordering + phase membership live in src/data/journey.ts.
+ */
+const modules = defineCollection({
+  loader: glob({ base: './src/content/modules', pattern: '**/*.md' }),
+  schema: z.object({
+    title: z.string(), // e.g. "Command line basics"
+    focus: z.string(), // one-line tagline
+    hours: z.number(), // estimated hours for the module
+    tech: z.array(z.string()).default([]), // tech badges
+    lane: z.string().optional(), // specialization lane key (Phase 7+ only)
+    objectives: z.array(z.string()), // 3–5 "by the end you can…" bullets (the goals)
+    days: z.array(day), // daily breakdown (same shape as weeks)
+    project: z
+      .object({
+        title: z.string(),
+        brief: z.string(),
+        deploy: z.string().optional(),
+        rubric: z.array(z.string()),
+      })
+      .optional(),
+    deliverable: z.string().optional(),
+    milestone: z.boolean().default(false),
+    proSkills: z.array(z.string()).default([]),
+    resources: z.array(linkResource).default([]),
+  }),
+});
+
+export const collections = { weeks, modules };

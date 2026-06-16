@@ -1,0 +1,291 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TechBadge from '../components/TechBadge.astro';
+import {
+  year1Phases,
+  pace,
+  freelanceThread,
+  lanes,
+  totalFoundationHours,
+  type PhaseItem,
+} from '../data/journey';
+
+const weeks = await getCollection('weeks');
+const modules = await getCollection('modules');
+
+const weekByNum = (n: number) => weeks.find((w) => w.data.week === n);
+const moduleBySlug = (s: string) => modules.find((m) => m.id === s);
+const humanize = (s: string) => s.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+
+interface Resolved {
+  exists: boolean;
+  href: string | null;
+  kicker: string;
+  title: string;
+  focus: string;
+  tech: string[];
+  hours: number | null;
+}
+
+function resolveItem(item: PhaseItem): Resolved {
+  if (item.kind === 'week') {
+    const w = weekByNum(item.week);
+    return {
+      exists: !!w,
+      href: w ? `/weeks/${item.week}` : null,
+      kicker: `Course · Week ${item.week}`,
+      title: w?.data.title ?? `Week ${item.week}`,
+      focus: w?.data.focus ?? '',
+      tech: w?.data.tech ?? [],
+      hours: w?.data.hours ?? null,
+    };
+  }
+  const m = moduleBySlug(item.slug);
+  return {
+    exists: !!m,
+    href: m ? `/foundation/${item.slug}` : null,
+    kicker: 'New module',
+    title: m?.data.title ?? humanize(item.slug),
+    focus: m?.data.focus ?? 'Full step-by-step content is on the way.',
+    tech: m?.data.tech ?? [],
+    hours: m?.data.hours ?? null,
+  };
+}
+
+const phases = year1Phases.map((phase) => ({ phase, items: phase.items.map(resolveItem) }));
+const fullTime = pace.find((p) => p.featured);
+---
+
+<BaseLayout
+  title="Year 1 — The Foundation"
+  description="The deep, full foundation that takes a complete beginner to a market-ready, earning IT freelancer: full-stack development plus real AI engineering plus freelance business — ~900 hours, about 6 months full-time."
+>
+  <!-- ── Hero ─────────────────────────────────────────────────────────── -->
+  <section class="grid-paper border-b-2 border-ink">
+    <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-20">
+      <a href="/journey" class="inline-flex items-center gap-1.5 font-mono text-xs text-ink-2 underline-offset-4 hover:text-vermilion-deep hover:underline">
+        <span aria-hidden="true">←</span> The 4-year journey
+      </a>
+      <p class="reveal mt-4 inline-flex items-center gap-2 rounded-full border-2 border-ink bg-card px-3 py-1 font-mono text-xs font-semibold tracking-wide shadow-block-sm">
+        <span class="h-2 w-2 rounded-full bg-vermilion"></span>
+        YEAR 1 · ZERO → READY TO EARN
+      </p>
+      <h1 class="reveal mt-5 max-w-3xl text-balance text-4xl font-semibold leading-[1.04] tracking-tight sm:text-5xl" style="animation-delay:.05s">
+        The deep foundation — built <span class="marker-underline">before</span> you go pro.
+      </h1>
+      <p class="reveal mt-5 max-w-2xl text-pretty text-lg text-ink-2" style="animation-delay:.1s">
+        Ten phases that take a complete beginner to a genuinely market-ready freelancer:
+        full-stack development, real AI engineering, and the business of getting paid. No rushing
+        to market half-ready — you build deep, then compete.
+      </p>
+
+      <!-- Pace table -->
+      <div class="reveal mt-8" style="animation-delay:.15s">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-vermilion-deep">
+          ≈{totalFoundationHours} hours · pick your pace
+        </p>
+        <dl class="mt-3 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4">
+          {
+            pace.map((p) => (
+              <div
+                class:list={[
+                  'rounded-xl border-2 border-ink p-3 text-center',
+                  p.featured ? 'bg-ink text-paper shadow-block-sm' : 'bg-card',
+                ]}
+              >
+                <dt class="font-mono text-[0.65rem] uppercase tracking-wide" class:list={[p.featured ? 'text-honey' : 'text-ink-3']}>
+                  {p.label}
+                </dt>
+                <dd class="mt-1 font-display text-base font-semibold">{p.hoursPerWeek} h/wk</dd>
+                <dd class="font-mono text-xs" class:list={[p.featured ? 'text-paper/75' : 'text-ink-2']}>{p.toGoPro}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <p class="mt-2 font-mono text-xs text-ink-3">
+          Target: <span class="text-ink-2">{fullTime?.toGoPro} at full-time pace</span> before you take your first paid gig.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── How Year 1 reuses the course ─────────────────────────────────── -->
+  <section class="border-b-2 border-ink bg-paper-2">
+    <div class="mx-auto max-w-6xl px-4 py-6 sm:px-6">
+      <p class="text-pretty text-sm text-ink-2">
+        <span class="font-semibold text-ink">Note:</span> Phases marked
+        <span class="mx-1 inline-flex items-center rounded-md border border-ink/25 bg-card px-1.5 py-0.5 font-mono text-[0.65rem]">Course · Week N</span>
+        reuse the existing <a href="/roadmap" class="font-medium underline underline-offset-2 hover:text-vermilion-deep">12-week Click &amp; Learn course</a>
+        as Year 1's technical core. The <span class="mx-1 inline-flex items-center rounded-md border border-ink/25 bg-card px-1.5 py-0.5 font-mono text-[0.65rem]">New module</span>
+        items extend it into full-stack, AI engineering, and freelancing.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── The 10-phase timeline ────────────────────────────────────────── -->
+  <div class="mx-auto max-w-4xl px-4 py-14 sm:px-6">
+    {
+      phases.map(({ phase, items }) => (
+        <section class="mb-14">
+          <div class="flex items-baseline gap-3">
+            <span class="font-mono text-sm font-bold" style={`color:${phase.hex}`}>
+              {String(phase.number).padStart(2, '0')}
+            </span>
+            <h2 class="font-display text-2xl font-semibold">{phase.name}</h2>
+            <span class="font-mono text-xs text-ink-3">~{phase.hours}h</span>
+          </div>
+          <p class="mt-1 max-w-2xl text-sm text-ink-2">{phase.blurb}</p>
+
+          <ol class="mt-5 space-y-3 border-l-2 pl-5 sm:pl-7" style={`border-color:${phase.hex}`}>
+            {items.map((it) => (
+              <li class="relative">
+                <span
+                  class="absolute -left-[1.65rem] top-5 h-3.5 w-3.5 rounded-full border-2 border-ink sm:-left-[2.15rem]"
+                  style={`background:${phase.hex}`}
+                  aria-hidden="true"
+                />
+                {it.exists && it.href ? (
+                  <a
+                    href={it.href}
+                    class="group flex flex-col gap-2 rounded-[14px] border-2 border-ink bg-card p-5 shadow-block-sm transition-transform hover:-translate-y-0.5 sm:flex-row sm:items-center sm:gap-4"
+                  >
+                    <div class="min-w-0 flex-1">
+                      <span class="font-mono text-[0.65rem] uppercase tracking-wide text-ink-3">{it.kicker}</span>
+                      <h3 class="font-display text-lg font-semibold group-hover:text-vermilion-deep">{it.title}</h3>
+                      {it.focus && <p class="mt-0.5 text-sm text-ink-2">{it.focus}</p>}
+                      {it.tech.length > 0 && (
+                        <div class="mt-2 flex flex-wrap items-center gap-1.5">
+                          {it.tech.map((t) => (
+                            <TechBadge tech={t} />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    {it.hours && <span class="hidden shrink-0 font-mono text-xs text-ink-3 sm:block">~{it.hours}h →</span>}
+                  </a>
+                ) : (
+                  <div class="flex flex-col gap-2 rounded-[14px] border-2 border-dashed border-ink/35 bg-paper p-5 sm:flex-row sm:items-center sm:gap-4">
+                    <div class="min-w-0 flex-1">
+                      <span class="font-mono text-[0.65rem] uppercase tracking-wide text-ink-3">{it.kicker}</span>
+                      <h3 class="font-display text-lg font-semibold text-ink-2">{it.title}</h3>
+                      {it.focus && <p class="mt-0.5 text-sm text-ink-3">{it.focus}</p>}
+                    </div>
+                    <span class="shrink-0 rounded-full border border-ink/25 bg-card px-2.5 py-1 font-mono text-[0.62rem] font-semibold text-ink-3">
+                      coming soon
+                    </span>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ol>
+        </section>
+      ))
+    }
+
+    <!-- Go-pro marker -->
+    <div class="rounded-[14px] border-2 border-ink bg-ink p-7 text-center text-paper shadow-block">
+      <p class="font-mono text-xs uppercase tracking-[0.2em] text-honey">End of Year 1</p>
+      <h2 class="mt-1 font-display text-2xl font-semibold text-paper">You're ready to go pro.</h2>
+      <p class="mx-auto mt-2 max-w-md text-paper/80">
+        Deep skills, a real portfolio, and a launch plan. Next: your first paid client — and the
+        long climb in Years 2–4.
+      </p>
+      <a
+        href="/journey"
+        class="mt-5 inline-flex items-center gap-2 rounded-xl border-2 border-ink bg-vermilion px-5 py-3 font-semibold text-white shadow-block-sm transition-transform hover:-translate-y-0.5"
+      >
+        See the full journey <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Freelance-readiness thread ───────────────────────────────────── -->
+  <section class="border-y-2 border-ink bg-paper-2">
+    <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+      <div class="max-w-2xl">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-vermilion-deep">🔥 Runs through every phase</p>
+        <h2 class="mt-2 text-balance text-3xl font-semibold tracking-tight sm:text-4xl">The freelance-readiness thread</h2>
+        <p class="mt-3 text-pretty text-ink-2">
+          Most talented learners never earn because the business skills get bolted on at the end.
+          Here they're threaded from week one — so by the time you can build, you can also sell.
+        </p>
+      </div>
+      <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          freelanceThread.map((t) => (
+            <li class="rounded-[14px] border-2 border-ink bg-card p-5 shadow-block-sm">
+              <div class="flex items-center justify-between gap-2">
+                <h3 class="font-display text-lg font-semibold">{t.name}</h3>
+                <span class="shrink-0 rounded-md border border-ink/20 bg-paper-2 px-2 py-0.5 font-mono text-[0.6rem] font-semibold text-ink-2">{t.id}</span>
+              </div>
+              <p class="mt-2 text-sm text-ink-2">{t.covers}</p>
+              <p class="mt-3 font-mono text-xs text-ink-3">Starts: {t.starts}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ── Choose your lane ─────────────────────────────────────────────── -->
+  <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+    <div class="max-w-2xl">
+      <p class="font-mono text-xs uppercase tracking-[0.2em] text-vermilion-deep">Phase 8 onward</p>
+      <h2 class="mt-2 text-balance text-3xl font-semibold tracking-tight sm:text-4xl">Choose your lane</h2>
+      <p class="mt-3 text-pretty text-ink-2">
+        The foundation makes you dangerous everywhere — then you specialize to be defensible.
+        <strong> AI Automation &amp; Engineering</strong> is the primary path baked into this
+        roadmap; these are your options to go deep on.
+      </p>
+    </div>
+    <ul class="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {
+        lanes.map((lane) => (
+          <li
+            class:list={[
+              'rounded-[14px] border-2 border-ink p-5',
+              lane.primary ? 'bg-ink text-paper shadow-block' : 'bg-card shadow-block-sm',
+            ]}
+          >
+            <div class="flex items-center gap-2">
+              <h3 class="font-display text-lg font-semibold" class:list={[lane.primary ? 'text-paper' : '']}>{lane.name}</h3>
+              {lane.primary && (
+                <span class="rounded-full border-2 border-paper/30 bg-vermilion px-2 py-0.5 font-mono text-[0.6rem] font-bold text-white">PRIMARY</span>
+              )}
+            </div>
+            <p class="mt-2 text-sm" class:list={[lane.primary ? 'text-paper/85' : 'text-ink-2']}>{lane.blurb}</p>
+            <p class="mt-3 font-mono text-xs" class:list={[lane.primary ? 'text-honey' : 'text-ink-3']}>{lane.demand}</p>
+            <a
+              href={lane.starter.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="mt-3 inline-flex items-center gap-1.5 text-sm font-medium underline-offset-4 hover:underline"
+              class:list={[lane.primary ? 'text-honey' : 'text-vermilion-deep']}
+            >
+              <span aria-hidden="true">↗</span> {lane.starter.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- ── CTA ──────────────────────────────────────────────────────────── -->
+  <section class="border-t-2 border-ink bg-vermilion-deep text-white">
+    <div class="mx-auto max-w-6xl px-4 py-16 text-center sm:px-6">
+      <h2 class="mx-auto max-w-2xl text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
+        Don't know where to begin? Start here.
+      </h2>
+      <p class="mx-auto mt-3 max-w-xl text-pretty text-lg text-white/85">
+        Pick your pace, set up your workshop, and take your first three actions today.
+      </p>
+      <a
+        href="/start-here"
+        class="mt-7 inline-flex items-center gap-2 rounded-xl border-2 border-ink bg-card px-6 py-3.5 text-lg font-semibold text-ink shadow-block transition-transform hover:-translate-y-0.5 active:translate-y-0 active:shadow-block-sm"
+      >
+        Start here <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

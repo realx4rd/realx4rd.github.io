@@ -2,9 +2,9 @@
 import Logo from './Logo.astro';
 
 const nav = [
+  { href: '/foundation', label: 'Foundation' },
+  { href: '/journey', label: 'Journey' },
   { href: '/roadmap', label: 'Roadmap' },
-  { href: '/assignments', label: 'Assignments' },
-  { href: '/how-it-works', label: 'How it works' },
   { href: '/resources', label: 'Resources' },
 ];
 
@@ -42,10 +42,10 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
         ))
       }
       <a
-        href="/weeks/0"
+        href="/start-here"
         class="ml-2 inline-flex items-center gap-1.5 rounded-lg border-2 border-ink bg-vermilion px-3.5 py-2 text-sm font-semibold text-white shadow-block-sm transition-transform hover:-translate-y-0.5 active:translate-y-0 active:shadow-none"
       >
-        Start free <span aria-hidden="true">→</span>
+        Start here <span aria-hidden="true">→</span>
       </a>
     </nav>
 
@@ -92,10 +92,10 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
         ))
       }
       <a
-        href="/weeks/0"
+        href="/start-here"
         class="mt-1 block rounded-lg border-2 border-ink bg-vermilion px-3 py-2.5 text-center text-base font-semibold text-white shadow-block-sm"
       >
-        Start free →
+        Start here →
       </a>
     </div>
   </nav>

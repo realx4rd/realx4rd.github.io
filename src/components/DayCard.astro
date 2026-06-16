@@ -1,9 +1,10 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import type { Day } from '../types';
 
 interface Props {
-  day: CollectionEntry<'weeks'>['data']['days'][number];
-  week: number;
+  day: Day;
+  /** Namespaces the collapsible panel's DOM id — a week number or a module slug. */
+  week: number | string;
 }
 
 const { day, week } = Astro.props;

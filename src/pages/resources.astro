@@ -66,11 +66,56 @@ const groups = [
     ],
   },
   {
-    name: 'Deploy for free',
+    name: 'Deploy & ship for free',
     blurb: 'Get your work on the real internet.',
     links: [
+      { label: 'Vercel — Docs', url: 'https://vercel.com/docs' },
+      { label: 'Netlify — Docs', url: 'https://docs.netlify.com/' },
       { label: 'GitHub Pages — Quickstart', url: 'https://docs.github.com/en/pages/quickstart' },
       { label: 'Cloudflare Pages — Docs', url: 'https://developers.cloudflare.com/pages/' },
+    ],
+  },
+  {
+    name: 'React & TypeScript',
+    blurb: 'The industry-standard UI library and typed JavaScript.',
+    links: [
+      { label: 'React — Official docs (react.dev)', url: 'https://react.dev/learn' },
+      { label: 'The Odin Project — React', url: 'https://www.theodinproject.com/paths/full-stack-javascript/courses/react' },
+      { label: 'Scrimba — Learn React (free)', url: 'https://scrimba.com/learn/learnreact' },
+      { label: 'TypeScript — Handbook', url: 'https://www.typescriptlang.org/docs/handbook/intro.html' },
+    ],
+  },
+  {
+    name: 'Backend, APIs & Databases',
+    blurb: 'The server side — so you can ship full-stack products.',
+    links: [
+      { label: 'roadmap.sh — Backend Developer', url: 'https://roadmap.sh/backend' },
+      { label: 'Node.js — Learn', url: 'https://nodejs.org/en/learn' },
+      { label: 'MDN — Express/Node server-side', url: 'https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Server-side/Express_Nodejs' },
+      { label: 'PostgreSQL Tutorial', url: 'https://www.postgresqltutorial.com/' },
+      { label: 'Supabase — Docs', url: 'https://supabase.com/docs' },
+    ],
+  },
+  {
+    name: 'AI Engineering & Automation',
+    blurb: 'The 2026 differentiator — build with LLMs and automate real work.',
+    links: [
+      { label: 'OpenAI — API quickstart', url: 'https://platform.openai.com/docs/quickstart' },
+      { label: 'Anthropic — Claude docs', url: 'https://docs.anthropic.com/' },
+      { label: 'Prompt Engineering Guide', url: 'https://www.promptingguide.ai/' },
+      { label: 'n8n — Docs (automation)', url: 'https://docs.n8n.io/' },
+      { label: 'Make — Help center', url: 'https://www.make.com/en/help/home' },
+      { label: 'roadmap.sh — AI & Data Scientist', url: 'https://roadmap.sh/ai-data-scientist' },
+    ],
+  },
+  {
+    name: 'Freelancing & getting paid',
+    blurb: 'Turn skills into income — the business half of the job.',
+    links: [
+      { label: 'Upwork — Freelancing resources', url: 'https://www.upwork.com/resources' },
+      { label: 'freeCodeCamp — How to start freelancing', url: 'https://www.freecodecamp.org/news/how-to-start-freelancing/' },
+      { label: 'Freelancers Union — Getting paid & contracts', url: 'https://blog.freelancersunion.org/' },
+      { label: 'Contra — Commission-free freelancing', url: 'https://contra.com/' },
     ],
   },
 ];
@@ -78,16 +123,17 @@ const groups = [
 
 <BaseLayout
   title="Resources"
-  description="A curated library of the best free resources for learning web development — MDN, The Odin Project, freeCodeCamp, official docs, plus design, accessibility, SEO and deployment guides."
+  description="A curated library of the best free resources for the whole journey — HTML/CSS/JS, React, backend & databases, AI engineering & automation, design, deployment, and freelancing — MDN, The Odin Project, freeCodeCamp, roadmap.sh and official docs."
 >
   <section class="grid-paper border-b-2 border-ink">
     <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6">
       <p class="font-mono text-xs uppercase tracking-[0.2em] text-vermilion-deep">Resources</p>
       <h1 class="mt-2 text-balance text-4xl font-semibold tracking-tight sm:text-5xl">The best of the free web</h1>
       <p class="mt-4 max-w-2xl text-pretty text-lg text-ink-2">
-        You don't need to buy anything to learn web development — the best material is free.
-        This is our hand-picked shortlist. Every week page also links the exact resources for
-        that week.
+        You don't need to buy anything to go from beginner to earning freelancer — the best
+        material is free. This is our hand-picked shortlist across the whole path: web
+        foundations, full-stack, AI engineering, and the business of freelancing. Every week and
+        module page also links the exact resources for that topic.
       </p>
     </div>
   </section>
