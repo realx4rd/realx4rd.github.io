@@ -1,15 +1,33 @@
 ---
 import Logo from './Logo.astro';
 
-const nav = [
-  { href: '/foundation', label: 'Foundation' },
-  { href: '/journey', label: 'Journey' },
-  { href: '/roadmap', label: 'Roadmap' },
-  { href: '/resources', label: 'Resources' },
-];
-
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
-const isActive = (href: string) => path === href || path.startsWith(href + '/');
+const isV2 = path === '/v2' || path.startsWith('/v2/');
+
+// v1 (root) and v2 (/v2/*) get their own nav so the two courses never mix.
+const nav = isV2
+  ? [
+      { href: '/v2', label: 'Foundation' },
+      { href: '/v2/journey', label: 'Journey' },
+      { href: '/v2/start-here', label: 'Start here' },
+      { href: '/resources', label: 'Resources' },
+    ]
+  : [
+      { href: '/roadmap', label: 'Roadmap' },
+      { href: '/how-it-works', label: 'How it works' },
+      { href: '/resources', label: 'Resources' },
+    ];
+
+// The primary CTA bridges to the other track; v2 also gets a back-link to v1.
+const cta = isV2
+  ? { href: '/v2/start-here', label: 'Start here' }
+  : { href: '/v2', label: 'The Foundation' };
+const crossLink = isV2 ? { href: '/', label: 'Front-end course' } : null;
+
+const isActive = (href: string) =>
+  href === '/v2'
+    ? path === '/v2' || path.startsWith('/v2/weeks') || path.startsWith('/v2/modules')
+    : path === href || path.startsWith(href + '/');
 ---
 
 <header
@@ -41,11 +59,19 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
           </a>
         ))
       }
+      {crossLink && (
+        <a
+          href={crossLink.href}
+          class="ml-1 rounded-lg px-3 py-2 text-sm font-medium text-ink-2 transition-colors hover:bg-paper-2"
+        >
+          <span aria-hidden="true">←</span> {crossLink.label}
+        </a>
+      )}
       <a
-        href="/start-here"
+        href={cta.href}
         class="ml-2 inline-flex items-center gap-1.5 rounded-lg border-2 border-ink bg-vermilion px-3.5 py-2 text-sm font-semibold text-white shadow-block-sm transition-transform hover:-translate-y-0.5 active:translate-y-0 active:shadow-none"
       >
-        Start here <span aria-hidden="true">→</span>
+        {cta.label} <span aria-hidden="true">→</span>
       </a>
     </nav>
 
@@ -91,11 +117,19 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
           </a>
         ))
       }
+      {crossLink && (
+        <a
+          href={crossLink.href}
+          class="block rounded-lg px-3 py-2.5 text-base font-medium text-ink-2 hover:bg-paper-2"
+        >
+          ← {crossLink.label}
+        </a>
+      )}
       <a
-        href="/start-here"
+        href={cta.href}
         class="mt-1 block rounded-lg border-2 border-ink bg-vermilion px-3 py-2.5 text-center text-base font-semibold text-white shadow-block-sm"
       >
-        Start here →
+        {cta.label} →
       </a>
     </div>
   </nav>

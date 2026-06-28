@@ -2,27 +2,33 @@
 import Logo from './Logo.astro';
 
 const year = new Date().getFullYear();
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isV2 = path === '/v2' || path.startsWith('/v2/');
 
-const cols = [
-  {
-    heading: 'Become a freelancer',
-    links: [
-      { href: '/start-here', label: 'Start here' },
-      { href: '/foundation', label: 'Year 1 — The Foundation' },
-      { href: '/journey', label: 'The 4-year journey' },
-      { href: '/resources', label: 'Resources' },
-    ],
-  },
-  {
-    heading: 'The 12-week course',
-    links: [
-      { href: '/roadmap', label: 'Course roadmap' },
-      { href: '/weeks/0', label: 'Week 0 — Launch Pad' },
-      { href: '/assignments', label: 'Assignments' },
-      { href: '/how-it-works', label: 'How it works' },
-    ],
-  },
-];
+const foundationCol = {
+  heading: 'The Foundation (v2)',
+  links: [
+    { href: '/v2/start-here', label: 'Start here' },
+    { href: '/v2', label: 'Year 1 — The Foundation' },
+    { href: '/v2/journey', label: 'The 4-year journey' },
+    { href: '/resources', label: 'Resources' },
+  ],
+};
+const courseCol = {
+  heading: 'The 12-week course',
+  links: [
+    { href: '/roadmap', label: 'Course roadmap' },
+    { href: '/weeks/0', label: 'Week 0 — Launch Pad' },
+    { href: '/assignments', label: 'Assignments' },
+    { href: '/how-it-works', label: 'How it works' },
+  ],
+};
+// Lead with the column for the track you're currently in.
+const cols = isV2 ? [foundationCol, courseCol] : [courseCol, foundationCol];
+
+const blurb = isV2
+  ? 'The deep foundation that takes a complete beginner to a market-ready, earning freelancer — full-stack, AI engineering, and the business of getting paid.'
+  : 'A free, non-profit academy that takes complete beginners from zero to shipping real, responsive, interactive websites — in three self-paced months.';
 ---
 
 <footer class="mt-24 border-t-2 border-ink bg-paper-2">
@@ -34,8 +40,7 @@ const cols = [
           <span class="font-display text-lg font-semibold tracking-tight">Click &amp; Learn Academy</span>
         </a>
         <p class="mt-4 max-w-sm text-pretty text-sm leading-relaxed text-ink-2">
-          A free, non-profit academy that takes complete beginners from zero to shipping
-          real, responsive, interactive websites — in three self-paced months.
+          {blurb}
         </p>
         <p class="mt-4 inline-flex items-start gap-2 rounded-lg border border-ink/15 bg-card px-3 py-2 font-mono text-xs leading-relaxed text-ink-2">
           <span aria-hidden="true">▲</span>

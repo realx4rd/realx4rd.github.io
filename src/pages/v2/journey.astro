@@ -1,6 +1,6 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { years, milestones, totalFoundationHours } from '../data/journey';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { years, milestones, totalFoundationHours } from '../../data/journey';
 ---
 
 <BaseLayout
@@ -24,13 +24,13 @@ import { years, milestones, totalFoundationHours } from '../data/journey';
       </p>
       <div class="reveal mt-7 flex flex-wrap gap-3" style="animation-delay:.15s">
         <a
-          href="/foundation"
+          href="/v2"
           class="inline-flex items-center gap-2 rounded-xl border-2 border-ink bg-vermilion px-5 py-3 font-semibold text-white shadow-block transition-transform hover:-translate-y-0.5 active:translate-y-0 active:shadow-block-sm"
         >
           Open Year 1 — The Foundation <span aria-hidden="true">→</span>
         </a>
         <a
-          href="/start-here"
+          href="/v2/start-here"
           class="inline-flex items-center gap-2 rounded-xl border-2 border-ink bg-card px-5 py-3 font-semibold shadow-block-sm transition-transform hover:-translate-y-0.5"
         >
           Start here
@@ -79,7 +79,7 @@ import { years, milestones, totalFoundationHours } from '../data/journey';
                   </ul>
                   {y.detailed && (
                     <a
-                      href="/foundation"
+                      href="/v2"
                       class="mt-4 inline-flex items-center gap-1.5 font-semibold text-vermilion-deep underline-offset-4 hover:underline"
                     >
                       Explore all 10 phases (≈{totalFoundationHours}h) <span aria-hidden="true">→</span>
@@ -144,7 +144,7 @@ import { years, milestones, totalFoundationHours } from '../data/journey';
       The best time to start was a year ago. The second best is today.
     </h2>
     <a
-      href="/start-here"
+      href="/v2/start-here"
       class="mt-7 inline-flex items-center gap-2 rounded-xl border-2 border-ink bg-vermilion px-6 py-3.5 text-lg font-semibold text-white shadow-block transition-transform hover:-translate-y-0.5 active:translate-y-0 active:shadow-block-sm"
     >
       Start here <span aria-hidden="true">→</span>

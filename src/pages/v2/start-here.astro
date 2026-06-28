@@ -1,6 +1,6 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { pace, totalFoundationHours } from '../data/journey';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { pace, totalFoundationHours } from '../../data/journey';
 
 const setup = [
   { n: 1, tool: 'A code editor', what: 'Install VS Code + the Prettier and Live Server extensions.', icon: '⌨' },
@@ -16,13 +16,13 @@ const firstActions = [
   {
     t: 'Set up your workshop (Week 0)',
     d: 'Work through Launch Pad: editor, terminal, Git, GitHub, DevTools, and your AI ground rules. ~7 hours, no pressure to "get code right" yet.',
-    href: '/weeks/0',
+    href: '/v2/weeks/0',
     cta: 'Open Week 0 — Launch Pad',
   },
   {
     t: 'Open Year 1 and start Phase 0',
     d: 'The Foundation lays out all 10 phases in order. Begin at the top and move down one item at a time — every item ships something.',
-    href: '/foundation',
+    href: '/v2',
     cta: 'Open Year 1 — The Foundation',
   },
 ];
@@ -176,7 +176,7 @@ const loop = [
       Ten phases, in order, from your first line of HTML to your first paid invoice.
     </p>
     <a
-      href="/foundation"
+      href="/v2"
       class="mt-7 inline-flex items-center gap-2 rounded-xl border-2 border-ink bg-vermilion px-6 py-3.5 text-lg font-semibold text-white shadow-block transition-transform hover:-translate-y-0.5 active:translate-y-0 active:shadow-block-sm"
     >
       Open Year 1 — The Foundation <span aria-hidden="true">→</span>

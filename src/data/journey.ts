@@ -33,8 +33,8 @@ export const pace: Pace[] = [
 
 /** A reference into one of the two content collections, in journey order. */
 export type PhaseItem =
-  | { kind: 'week'; week: number } // reused course week (links to /weeks/N)
-  | { kind: 'module'; slug: string }; // new module (links to /foundation/slug)
+  | { kind: 'week'; week: number } // reused course week (links to /v2/weeks/N)
+  | { kind: 'module'; slug: string }; // new module (links to /v2/modules/slug)
 
 export interface FoundationPhase {
   key: string;
@@ -408,6 +408,10 @@ export const foundationSequence: { item: PhaseItem; phase: FoundationPhase }[] =
 /** Find which phase a given module slug belongs to. */
 export const phaseForModule = (slug: string): FoundationPhase | undefined =>
   year1Phases.find((p) => p.items.some((it) => it.kind === 'module' && it.slug === slug));
+
+/** Find which phase a given reused course week belongs to. */
+export const phaseForWeek = (week: number): FoundationPhase | undefined =>
+  year1Phases.find((p) => p.items.some((it) => it.kind === 'week' && it.week === week));
 
 /** All module slugs referenced by the journey, in order (for stub-generation / sanity checks). */
 export const allModuleSlugs: string[] = foundationSequence

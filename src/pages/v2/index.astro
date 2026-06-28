@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import TechBadge from '../components/TechBadge.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TechBadge from '../../components/TechBadge.astro';
 import {
   year1Phases,
   pace,
@@ -9,7 +9,7 @@ import {
   lanes,
   totalFoundationHours,
   type PhaseItem,
-} from '../data/journey';
+} from '../../data/journey';
 
 const weeks = await getCollection('weeks');
 const modules = await getCollection('modules');
@@ -33,7 +33,7 @@ function resolveItem(item: PhaseItem): Resolved {
     const w = weekByNum(item.week);
     return {
       exists: !!w,
-      href: w ? `/weeks/${item.week}` : null,
+      href: w ? `/v2/weeks/${item.week}` : null,
       kicker: `Course · Week ${item.week}`,
       title: w?.data.title ?? `Week ${item.week}`,
       focus: w?.data.focus ?? '',
@@ -44,7 +44,7 @@ function resolveItem(item: PhaseItem): Resolved {
   const m = moduleBySlug(item.slug);
   return {
     exists: !!m,
-    href: m ? `/foundation/${item.slug}` : null,
+    href: m ? `/v2/modules/${item.slug}` : null,
     kicker: 'New module',
     title: m?.data.title ?? humanize(item.slug),
     focus: m?.data.focus ?? 'Full step-by-step content is on the way.',
@@ -59,12 +59,12 @@ const fullTime = pace.find((p) => p.featured);
 
 <BaseLayout
   title="Year 1 — The Foundation"
-  description="The deep, full foundation that takes a complete beginner to a market-ready, earning IT freelancer: full-stack development plus real AI engineering plus freelance business — ~900 hours, about 6 months full-time."
+  description="The deep, full foundation that takes a complete beginner to a market-ready, earning IT freelancer: full-stack development plus real AI engineering plus freelance business — ~830 hours, about 6 months full-time."
 >
   <!-- ── Hero ─────────────────────────────────────────────────────────── -->
   <section class="grid-paper border-b-2 border-ink">
     <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-20">
-      <a href="/journey" class="inline-flex items-center gap-1.5 font-mono text-xs text-ink-2 underline-offset-4 hover:text-vermilion-deep hover:underline">
+      <a href="/v2/journey" class="inline-flex items-center gap-1.5 font-mono text-xs text-ink-2 underline-offset-4 hover:text-vermilion-deep hover:underline">
         <span aria-hidden="true">←</span> The 4-year journey
       </a>
       <p class="reveal mt-4 inline-flex items-center gap-2 rounded-full border-2 border-ink bg-card px-3 py-1 font-mono text-xs font-semibold tracking-wide shadow-block-sm">
@@ -192,7 +192,7 @@ const fullTime = pace.find((p) => p.featured);
         long climb in Years 2–4.
       </p>
       <a
-        href="/journey"
+        href="/v2/journey"
         class="mt-5 inline-flex items-center gap-2 rounded-xl border-2 border-ink bg-vermilion px-5 py-3 font-semibold text-white shadow-block-sm transition-transform hover:-translate-y-0.5"
       >
         See the full journey <span aria-hidden="true">→</span>
@@ -281,7 +281,7 @@ const fullTime = pace.find((p) => p.featured);
         Pick your pace, set up your workshop, and take your first three actions today.
       </p>
       <a
-        href="/start-here"
+        href="/v2/start-here"
         class="mt-7 inline-flex items-center gap-2 rounded-xl border-2 border-ink bg-card px-6 py-3.5 text-lg font-semibold text-ink shadow-block transition-transform hover:-translate-y-0.5 active:translate-y-0 active:shadow-block-sm"
       >
         Start here <span aria-hidden="true">→</span>

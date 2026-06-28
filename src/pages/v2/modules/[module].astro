@@ -1,10 +1,10 @@
 ---
 import { getCollection, render } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import TechBadge from '../../components/TechBadge.astro';
-import DayCard from '../../components/DayCard.astro';
-import ProgressChecklist from '../../components/ProgressChecklist.astro';
-import { foundationSequence, phaseForModule } from '../../data/journey';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import TechBadge from '../../../components/TechBadge.astro';
+import DayCard from '../../../components/DayCard.astro';
+import ProgressChecklist from '../../../components/ProgressChecklist.astro';
+import { foundationSequence, phaseForModule } from '../../../data/journey';
 
 export async function getStaticPaths() {
   const weeks = await getCollection('weeks');
@@ -20,7 +20,7 @@ export async function getStaticPaths() {
       return {
         key: `week-${item.week}`,
         exists: !!w,
-        href: `/weeks/${item.week}`,
+        href: `/v2/weeks/${item.week}`,
         kicker: item.week === 0 ? 'Launch Pad' : `Week ${item.week}`,
         title: w?.data.title ?? `Week ${item.week}`,
       };
@@ -29,7 +29,7 @@ export async function getStaticPaths() {
     return {
       key: `module-${item.slug}`,
       exists: !!m,
-      href: `/foundation/${item.slug}`,
+      href: `/v2/modules/${item.slug}`,
       kicker: 'Module',
       title: m?.data.title ?? item.slug,
     };
@@ -76,7 +76,7 @@ const phaseHex = phase?.hex ?? '#80705c';
   <!-- Header band -->
   <section class="grid-paper border-b-2 border-ink">
     <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-      <a href="/foundation" class="inline-flex items-center gap-1.5 font-mono text-xs text-ink-2 underline-offset-4 hover:text-vermilion-deep hover:underline">
+      <a href="/v2" class="inline-flex items-center gap-1.5 font-mono text-xs text-ink-2 underline-offset-4 hover:text-vermilion-deep hover:underline">
         <span aria-hidden="true">←</span> Year 1 — The Foundation
       </a>
       <div class="mt-4 flex flex-wrap items-center gap-3">
@@ -199,7 +199,7 @@ const phaseHex = phase?.hex ?? '#80705c';
               <span class="mt-1 block font-display font-semibold group-hover:text-vermilion-deep">{next.title}</span>
             </a>
           ) : (
-            <a href="/foundation" class="group rounded-xl border-2 border-ink bg-honey/20 p-4 text-right shadow-block-sm transition-transform hover:-translate-y-0.5">
+            <a href="/v2" class="group rounded-xl border-2 border-ink bg-honey/20 p-4 text-right shadow-block-sm transition-transform hover:-translate-y-0.5">
               <span class="font-mono text-xs text-ink-3">Finished →</span>
               <span class="mt-1 block font-display font-semibold">Back to Year 1</span>
             </a>
